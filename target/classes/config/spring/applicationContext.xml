@@ -1,0 +1,54 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+	<!-- 加载db.properties文件中的内容，db.properties文件中key命名要有一定的特殊规则 -->
+	<context:property-placeholder location="classpath*:config/db.properties"  ignore-unresolvable="true" />
+	
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxActive" value="30" />
+		<property name="maxIdle" value="5" />
+	</bean>
+	
+	<!-- 下面这两个开启了自动扫描功能 -->
+	<!-- 开启注解配置 即Autowried -->
+	<context:annotation-config />
+	<!-- 使用自动注入的时候要 添加他来扫描bean之后才能在使用的时候 -->
+	<context:component-scan
+		base-package="com.dongruan.netctoss.serviceImpl,com.dongruan.netctoss.controller,com.dongruan.netctoss.pojo" />
+	<!-- 配置sqlsessionfactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 数据库连接池 -->
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:config/mapper/*Mapper.xml"></property>
+	</bean>
+	<!-- 开始对mapper进行扫描配置 -->
+	<!-- mapper的批量扫描 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 指定扫描包名 -->
+		<property name="basePackage" value="com.dongruan.netctoss.mapper" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	<!-- 事务 需要三件事才可以 一具体的事务实现着 二事务管理器 三 aop 事务控制 不起作用 -->
+	<!-- 这里使用 全注释 事务 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+</beans>

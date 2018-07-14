@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dongruan.netctoss.mapper.SysChargeMapper" >
+  <resultMap id="BaseResultMap" type="com.dongruan.netctoss.pojo.SysCharge" >
+    <id column="feeid" property="feeid" jdbcType="INTEGER" />
+    <result column="feename" property="feename" jdbcType="VARCHAR" />
+    <result column="feetype" property="feetype" jdbcType="CHAR" />
+    <result column="duration" property="duration" jdbcType="INTEGER" />
+    <result column="charge" property="charge" jdbcType="DECIMAL" />
+    <result column="percharge" property="percharge" jdbcType="DECIMAL" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="opentime" property="opentime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="chardescrip" property="chardescrip" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="checkFeename"  parameterType="String" resultType="String" >
+  	select feename from sys_charge where feename=#{feename}
+  </select>
+  
+  <select id="queryFeeByid"  parameterType="java.lang.Integer" resultType="com.dongruan.netctoss.pojo.SysCharge" >
+  	select * from sys_charge where feeid=#{feeid}
+  </select>
+  
+  
+  <select id="selectAllSyscharge" resultMap="BaseResultMap" >
+  	select * from sys_charge
+  </select>
+  
+  <update id="startFee" parameterType="java.lang.Integer"  >
+  	update sys_charge set status='开通' , opentime=CURRENT_TIMESTAMP where feeid=#{feeid}
+  </update>
+  
+  <update id="deleFeeStatById" parameterType="java.lang.Integer" >
+  	 update sys_charge set status='删除' where feeid=#{feeid}
+  </update>
+  
+  <update id="updateFeeByContidion" parameterType="com.dongruan.netctoss.pojo.SysCharge" >
+  	 update sys_charge set feename=#{feename}
+      <!-- <if test="feetype != null" >
+        ,feetype=#{feetype,jdbcType=VARCHAR}
+      </if> -->
+      ,feetype=#{feetype,jdbcType=VARCHAR},duration=#{duration},charge=#{charge},percharge=#{percharge}
+      <if test="chardescrip != null" >
+        ,chardescrip=#{chardescrip}
+      </if>
+	where feeid=#{feeid}
+  </update>
+  
+  
+  <insert id="insertChargeContion" parameterType="com.dongruan.netctoss.pojo.SysCharge" >	
+  	 insert into sys_charge
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="feeid != null" >
+        feeid,
+      </if>
+      <if test="feename != null" >
+        feename,
+      </if>
+      <if test="feetype != null" >
+        feetype,
+      </if>
+      <if test="duration != null" >
+        duration,
+      </if>
+      <if test="charge != null" >
+        charge,
+      </if>
+      <if test="percharge != null" >
+        percharge,
+      </if>
+      <if test="chardescrip != null" >
+        chardescrip,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="feeid != null" >
+        #{feeid,jdbcType=INTEGER},
+      </if>
+      <if test="feename != null" >
+        #{feename,jdbcType=VARCHAR},
+      </if>
+     <!--  <if test="feetype != null" >
+        #{feetype,jdbcType=CHAR},
+      </if> -->
+      #{feetype,jdbcType=VARCHAR},
+      <if test="duration != null" >
+        #{duration,jdbcType=INTEGER},
+      </if>
+      <if test="charge != null" >
+        #{charge,jdbcType=DECIMAL},
+      </if>
+      <if test="percharge != null" >
+        #{percharge,jdbcType=DECIMAL},
+      </if>
+      <if test="chardescrip != null" >
+        #{chardescrip,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <delete id="deleFeeByIdAjax" parameterType="java.lang.Integer" >
+  	 delete from sys_charge where feeid=#{feeid}
+  </delete>
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ <!--  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, name, type, duration, charge, percharge, createtime, opentime, status, charDescrip
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dongruan.netctoss.pojo.SysChargeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_charge
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_charge
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_charge
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.dongruan.netctoss.pojo.SysChargeExample" >
+    delete from sys_charge
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.dongruan.netctoss.pojo.SysCharge" >
+    insert into sys_charge (id, name, type, 
+      duration, charge, percharge, 
+      createtime, opentime, status, 
+      charDescrip)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=CHAR}, 
+      #{duration,jdbcType=INTEGER}, #{charge,jdbcType=DECIMAL}, #{percharge,jdbcType=DECIMAL}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{opentime,jdbcType=TIMESTAMP}, #{status,jdbcType=CHAR}, 
+      #{chardescrip,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dongruan.netctoss.pojo.SysCharge" >
+    insert into sys_charge
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="duration != null" >
+        duration,
+      </if>
+      <if test="charge != null" >
+        charge,
+      </if>
+      <if test="percharge != null" >
+        percharge,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="opentime != null" >
+        opentime,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="chardescrip != null" >
+        charDescrip,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="duration != null" >
+        #{duration,jdbcType=INTEGER},
+      </if>
+      <if test="charge != null" >
+        #{charge,jdbcType=DECIMAL},
+      </if>
+      <if test="percharge != null" >
+        #{percharge,jdbcType=DECIMAL},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="opentime != null" >
+        #{opentime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="chardescrip != null" >
+        #{chardescrip,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.dongruan.netctoss.pojo.SysChargeExample" resultType="java.lang.Integer" >
+    select count(*) from sys_charge
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update sys_charge
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=CHAR},
+      </if>
+      <if test="record.duration != null" >
+        duration = #{record.duration,jdbcType=INTEGER},
+      </if>
+      <if test="record.charge != null" >
+        charge = #{record.charge,jdbcType=DECIMAL},
+      </if>
+      <if test="record.percharge != null" >
+        percharge = #{record.percharge,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.opentime != null" >
+        opentime = #{record.opentime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=CHAR},
+      </if>
+      <if test="record.chardescrip != null" >
+        charDescrip = #{record.chardescrip,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update sys_charge
+    set id = #{record.id,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=CHAR},
+      duration = #{record.duration,jdbcType=INTEGER},
+      charge = #{record.charge,jdbcType=DECIMAL},
+      percharge = #{record.percharge,jdbcType=DECIMAL},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      opentime = #{record.opentime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=CHAR},
+      charDescrip = #{record.chardescrip,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dongruan.netctoss.pojo.SysCharge" >
+    update sys_charge
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=CHAR},
+      </if>
+      <if test="duration != null" >
+        duration = #{duration,jdbcType=INTEGER},
+      </if>
+      <if test="charge != null" >
+        charge = #{charge,jdbcType=DECIMAL},
+      </if>
+      <if test="percharge != null" >
+        percharge = #{percharge,jdbcType=DECIMAL},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="opentime != null" >
+        opentime = #{opentime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="chardescrip != null" >
+        charDescrip = #{chardescrip,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dongruan.netctoss.pojo.SysCharge" >
+    update sys_charge
+    set name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=CHAR},
+      duration = #{duration,jdbcType=INTEGER},
+      charge = #{charge,jdbcType=DECIMAL},
+      percharge = #{percharge,jdbcType=DECIMAL},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      opentime = #{opentime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=CHAR},
+      charDescrip = #{chardescrip,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update> -->
+  
+  
+</mapper>

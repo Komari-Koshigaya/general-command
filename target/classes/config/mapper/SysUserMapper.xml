@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dongruan.netctoss.mapper.SysUserMapper" >
+
+<select id="queryBySysUserId"  parameterType="java.lang.Integer"  resultType="com.dongruan.netctoss.pojo.SysUser">
+    select * from sys_admin where id = #{sysUserId}
+</select>
+</mapper>
