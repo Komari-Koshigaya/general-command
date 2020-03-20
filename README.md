@@ -1,8 +1,8 @@
-# .gitconfig
+## .gitconfig
 
 是git的全局配置文件，已配置好 git log的显示效果、显示中文文件名，linux系统将其复制到当前用户根目录 /home/xxx 即可。
 
-# .git
+## .git
 
 存有暂存区和版本库、提交信息，若删除则本地仓库信息也随之删除，使用git status会提示 `fatal: Not a git repository (or any of the parent directories): .git`
 
@@ -126,3 +126,50 @@ git pull 失败 ,提示：fatal: refusing to merge unrelated histories
 ---------------------------------------------------
 ```
 
+## 本地仓库同时推送到多个远程仓库
+
+#### 方法一
+
+使用 `git remote add origin xxx.git`  将本地仓库与多个远程仓库关联
+
+查看远程仓库情况
+
+`[niejun@localhost lab]$ git remote -v`
+`github  git@github.com:Komari-Koshigaya/apue-lab.git (fetch)`
+`github  git@github.com:Komari-Koshigaya/apue-lab.git (push)`
+`origin  git@gitee.com:komari/apue-lab.git (fetch)`
+`origin  git@gitee.com:komari/apue-lab.git (push)`
+
+然后再使用相应的命令 push 到对应的仓库就行了。*这种方法的缺点是每次要* push *多次。*
+
+ `git  push origin master:master`
+
+`git  push sudnyn master:master`
+
+#### 方法二
+
+1.只 `git remote add origin xx.git` 一次，
+
+2.使用 `git remote set-url --add origin xx.git` 添加远程仓库
+
+【或者修改本地仓库的  .git/config 文件，再 [remote "origin" 下增加 需要同时推送的 url]
+
+```
+[remote "origin"]
+	url = git@gitee.com:komari/apue-lab.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+	url = git@github.com:Komari-Koshigaya/apue-lab.git //增加的push地址
+```
+
+】
+
+查看远程仓库情况。可以看到 github 远程仓库有两个 push 地址。
+
+`[niejun@localhost lab]$ git remote -v`
+`origin  git@gitee.com:komari/apue-lab.git (fetch)`
+`origin  git@gitee.com:komari/apue-lab.git (push)`
+`origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)`
+
+*这种方法的好处是每次只需要*    `git push` *一次就行了。*
+
+***推荐使用方法二***
