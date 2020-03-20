@@ -1,0 +1,107 @@
+﻿  工作区：就是你在电脑上看到的目录，比如目录下testgit里的文件(.git隐藏目录版本库除外)。或者以后需要再新建的目录文件等等都属于工作区范畴。 
+      版本库(Repository)：工作区有一个隐藏目录.git,这个不属于工作区，这是版本库。其中版本库里面存了很多东西，其中最重要的就是stage(暂存区)，还有Git为我们自动创建了第一个分支master,以及指向master的一个指针HEAD。 
+我们前面说过使用Git提交文件到版本库有两步： 
+  第一步：是使用 git add 把文件添加进去，实际上就是把文件添加到暂存区。 
+  第二步：使用git commit提交更改，实际上就是把暂存区的所有内容提交到当前分支上。 
+-----------------------------------------
+设置：
+git config -l  //查看当前配置
+git config --global core.quotepath false // 设置显示中文文件名
+git config --global user.name "stormzhang"
+git config --global user.email "stormzhang.dev@gmail.com"  //此处邮箱应与github上的邮箱一致否则不会记录贡献
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset	%s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit	 --date=relative
+//git log的美化版
+git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset%s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+//之后直接 git lg即能达到上述效果*/
+
+
+如何将项目提交到git上
+ 1、在本地创建一个版本库（即文件夹），通过git init把它变成Git仓库；
+2、把项目复制到这个文件夹里面，再通过git add .把项目添加到仓库；
+3、再通过git commit -m "注释内容"把项目提交到仓库；
+4、在Github上设置好SSH密钥后，新建一个远程仓库，通过
+git remote add origin https://github.com/guyibang/TEST2.git 将本地仓库和远程仓库进行关联；
+5、最后通过 git push -f origin master 把本地仓库的项目推送到远程仓库（也就是Github）上；
+（参数f首次建议加上，以后可以不加。因为有的人在远程创建项目的时候会随着创建文件，没有f参数就不会覆盖远程已有的，导致push失败)
+
+
+-----------------------------
+git常用命令
+
+git init //把当前的目录变成可以管理的git仓库，生成隐藏文件 .git。
+git add XX //把xx文件添加到暂存区去。
+git add .                     //git add将当前目录所有文件提交到暂存区：
+git commit -m           "注释信息"//将暂存区的所有文件提交到仓库   多行注释需要使用  git commit
+git status //查看仓库状态
+git log //查看历史记录
+
+
+git branch //查看当前所有的分支
+git branch name //创建分支
+git checkout master //切换回master分支
+git checkout -b dev //创建dev分支 并切换到dev分支上
+git branch -d dev //删除dev分支
+
+git merge dev //在当前的分支上合并dev分支
+git clone https://github.com/zongyunqingfeng/testgit //从远程库中克隆
+
+git remote //查看远程库的信息
+git remote -v //查看远程库的详细信息
+git remote add gitee git@gitee.com:komari/apue.git  //关联远程仓库，起名为gitee
+git remote rm gitee  //取消关联名称为gitee的远程仓库
+
+
+git push origin master //Git会把master分支推送到远程库对应的远程分支上
+git push gitee master  //有多个远程仓库时，push需要制定仓库的名称，只有一个git push即可
+git push origin :stars//删除远程仓库的 stars分支
+git pull origin master //意思就是把远程最新的代码更新到本地。只有一个 gut pull即可。一般我们在push之前都会先pull这样不容易冲突
+
+git rm XX //删除XX文件
+git tag v1.0 //为当前文件贴上版本号
+git reflog    //查看历史记录的版本号id
+
+git diff readme.txt //只能比较当前文件和暂存区文件差异，什么是暂存区？就是你还没有执行git	add的文
+git diff <$id1>	<$id2>			//比较两次提交之间的差异 
+git diff <branch1>..<branch2>	//在两个分支之间比较	
+git diff --staged			//比较暂存区和版本库差异
+
+git reset -hard HEAD^ 或者 git reset -hard HEAD~                //回退到上一个版本 (如果想回退到100个版本，使用git reset -hard HEAD~100 )
+git reset --hard 版本号  //根据版本号恢复 若之前使用了git tag v1.0 可直接 git reset --hard v1.0
+
+git checkout -- readme.txt //把readme.txt文件在工作区做的修改全部撤销
+	这里有2种情况，如下： 
+	readme.txt自动修改后，还没有放到暂存区，使用 撤销修改就回到和版本库一模一样的状态。 
+	另外一种是readme.txt已经放入暂存区了，接着又作了修改，撤销修改就回到添加暂存区后的状态。 
+	对于第二种情况，我想我们继续做demo来看下，假如现在我对readme.txt添加一行 内容为6666666666666，
+	我git add 增加到暂存区后，接着添加内容7777777，直接通过撤销命令把未添加到暂存区内容撤销掉。
+
+
+
+git stash //把当前的工作隐藏起来 等以后恢复现场后继续工作
+git stash list //查看所有被隐藏的文件列表
+git stash apply //恢复被隐藏的文件，但是内容不删除
+git stash drop //删除文件
+git stash pop //恢复文件的同时 也删除文件
+
+-------------------------
+配置ssh
+注册github账号，由于你的本地Git仓库和github仓库之间的传输是通过SSH加密的，所以需要一点设置： 
+这个就是没有在你github上添加一个公钥。可以用 ssh -T git@github.com去测试一下
+创建SSH Key。在用户主目录下，看看有没有.ssh目录，如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，如果有的话，直接跳过此如下命令；否则输入	ssh-keygen	-t	rsa	，什么意思呢？就是指定	rsa	算法生成密钥，接着连续三个回 车键（不需要输入密码），然后就会生成两个文件	id_rsa和	id_rsa.pub，而id_rsaid_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
+---------------------------------------------------
+在第一次进行推送时，需要注意的是，GitHub网站上的仓库并非是空的，我们在创建时创建了一个README文档，因此需要将两者进行合并才行。
+git pull --rebase origin master
+最后，在进行推送即可。
+
+git push -u origin master
+这个带有-u这个参数是指，将master分支的所有内容都提交，第一次关联之后后边你再提交就可以不用这个参数了，之后你的每一次修改，你就可以只将你修改push就好了。
+git push origin master
+
+常见问题:
+remote: error: GH007: Your push would publish a private email address.
+	在GitHub的你账号网页上右上角，个人的登录退出的位置，找到setting：
+	setting->emails->Keep my email address private，把这一项去掉勾选即可。
+
+git pull 失败 ,提示：fatal: refusing to merge unrelated histories
+	使用这个强制的方法 git pull origin master --allow-unrelated-histories
+---------------------------------------------------
