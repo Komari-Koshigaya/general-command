@@ -163,6 +163,9 @@ git push origin :stars//删除远程仓库的 stars分支
 git pull origin master //意思就是把远程最新的代码更新到本地。只有一个 gut pull即可。一般我们在push之前都会先pull这样不容易冲突
 
 git rm XX //删除XX文件
+git mv srcfile renamefile  # 改名这个文件，名且将这个改名放入暂存区
+git rm --cached file  # 停止追踪file文件，但该文件会保留在工作区
+
 git tag v1.0 //为当前commit贴上版本号
 git tag v1.0 commitid # 为 commitid对应的提交贴上版本号V1.0
 git tag -d v1.0  # 删除本地tag
