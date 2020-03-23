@@ -162,7 +162,9 @@ git push gitee master  //有多个远程仓库时，push需要制定仓库的名
 git push origin :stars//删除远程仓库的 stars分支
 git pull origin master //意思就是把远程最新的代码更新到本地。只有一个 gut pull即可。一般我们在push之前都会先pull这样不容易冲突
 
-git rm XX //删除XX文件
+git rm a.txt //删除工作区里的文件a.txt，本地文件也将删除 (即删除 执行了git commit但还没git push的文件)
+git rm -f a.txt //删除暂存区里的 a.txt并将本地文件 a.txt删除
+ 
 git mv a.txt b.md  # 将暂存区里的 a.txt 改名为 b.md(仍在暂存区)，本地文件也被改成了 b.md
 git rm --cached file  # 停止追踪file文件(相当于将该文件仍处于untracked files)
 
