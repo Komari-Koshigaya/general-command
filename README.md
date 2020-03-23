@@ -1,3 +1,88 @@
+# 如何连接 VB里的centos
+
+简单可行，只需配置virtualbox:
+
+> 右键选择 ***VirtualBox6.1.4*** 里的Linux，我这里是以centos7为例子。 右键->设置->网络 连接方式选择 ：网络地址转换（NAT） 然后点高级->端口转发， 如图配置即可： 
+>
+> ![config_in_vb](doc/config_in_vb.png)
+>
+> 端口转发设置非常重要，shell连接本地ip上的9023端口，即可转发到虚拟机里的22端口。 主机端口和子系统端口可自己定义，根据实际需求设置。
+>
+> ***MobaXterm V20.1***  下ssh连接设置如下
+>
+> ![config_in_mobaxterm](doc/config_in_mobaxterm.png)
+>
+> 这样配置后，会通过ssh连接上本地虚拟机，并进入 配置的特定用户目录下
+
+# Linux新建普通用户并赋予sudo权限
+
+## 新建用户
+
+```shell
+su root    # 切换到root用户，新建用户需root权限，若当前登录时root账号，则无需此操作
+adduser niejun  # 增加新用户 niejun
+passwd niejun # 修改默认密码（若输入的密码很简单会提示，忽略即可）
+
+```
+
+## 为新用户授予 sudo权限
+
+1. 查找授权管理文件sudoers
+
+   ~~~shell
+   whereis sudoers  # 可以看大这个文件位于 /etc/sudoers
+   ~~~
+
+2. 修改sudoers的写权限
+
+   ~~~shell
+   chmod -v u+w /etc/sudoers   # 为当前用户添加写权限，该文件默认是只读的
+   ~~~
+
+3. 修改sudoers内容
+
+   ~~~shell
+   vi /etc/sudoers   
+   
+   #按insert进入编辑模式，找到 root用户在的位置添加如下内容   
+   niejun 	ALL=(ALL)			ALL
+   # 效果如下所示
+   ## Allow root to run any commands anywhere
+   root 	ALL=(ALL)			ALL
+   niejun 	ALL=(ALL)			ALL
+   ## 最后按 esc 进入命令模式 键入命令 ZZ  保存退出
+   ~~~
+
+4. 收回sudoers的写权限
+
+	~~~shell
+	chmod -v u-w /etc/sudoers    #收回当前用户对 /etc/sudoers 文件的写权限
+	~~~
+
+## 用户切换	
+
+```
+su niejun  # 切换到用户 niejun
+whoami     # 查看当前登录是哪个用户
+groups niejun   # 查看 用户 niejun 所属的用户组
+
+su  # 切换到root用户，或者键入 su root
+```
+
+## 可能出现的问题
+
+> 使用 adduser niejun 添加用户后 /home/niejun 该文件夹会自动生成，
+>
+> 若 执行命令时 出现下列情况
+>
+> ![linux_command_404](doc/linux_command_404.png)
+>
+> 代表缺少 .bashrc 和 .bash_profile 文件，可从 /root 或 /home/xxuser 下复制这两个文件到 /home/niejun 下
+
+
+
+# git操作命令
+
 ## .gitconfig
 
 是git的全局配置文件，已配置好 git log的显示效果、显示中文文件名，linux系统将其复制到当前用户根目录 /home/xxx 即可。
@@ -106,7 +191,8 @@ git stash pop //恢复文件的同时 也删除文件
 配置ssh
 注册github账号，由于你的本地Git仓库和github仓库之间的传输是通过SSH加密的，所以需要一点设置： 
 这个就是没有在你github上添加一个公钥。可以用 ssh -T git@github.com去测试一下
-创建SSH Key。在用户主目录下，看看有没有.ssh目录，如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，如果有的话，直接跳过此如下命令；否则输入	ssh-keygen	-t	rsa	，什么意思呢？就是指定	rsa	算法生成密钥，接着连续三个回 车键（不需要输入密码），然后就会生成两个文件	id_rsa和	id_rsa.pub，而id_rsaid_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
+创建SSH Key。在用户主目录下，看看有没有.ssh目录，如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，如果有的话，直接跳过此如下命令；否则输入
+ssh-keygen	-t	rsa	，什么意思呢？就是指定	rsa	算法生成密钥，接着连续三个回 车键（不需要输入密码），然后就会生成两个文件	id_rsa和	id_rsa.pub，而id_rsaid_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
 ---------------------------------------------------
 在第一次进行推送时，需要注意的是，GitHub网站上的仓库并非是空的，我们在创建时创建了一个README文档，因此需要将两者进行合并才行。
 git pull --rebase origin master
@@ -173,3 +259,43 @@ git pull 失败 ,提示：fatal: refusing to merge unrelated histories
 *这种方法的好处是每次只需要*    `git push` *一次就行了。*
 
 ***推荐使用方法二***
+
+# docker使用方法
+
+详见   [如何使用docker部署springboot项目](https://github.com/Komari-Koshigaya/university-services-with-miniprogram)
+
+```shell
+安装docker
+yum -y install docker-io //权限不够则需加上 sudo
+docker version //查看是否安装成功，出现版本号则成功
+vi /etc/docker/daemon.json //设置docker镜像，若已开启服务修改后重启服务方生效
+
+service docker start
+service docker stop
+
+sudo docker images
+sudo docker pull mysql:5.8
+sudo docker built -t miniserver:0.0.1 .
+sudo doccker image rm miniserver:0.0.1
+
+sudo docker run --rm -d -p 8080:8888 --name main --link mysql-docker:mysql-docker miniserver:0.0.1
+sudo docker run -d -p 8080:8888 --name main miniserver:0.0.1 
+sudo docker ps -a
+sudo docker logs -f main
+sudo docker stop main
+sudo docker start main
+
+# mysql 容器
+sudo docker volume create mysql_data  #创建数据卷用来保存mysql的数据，可多个容器共享一个数据卷，当容器被删除时，数据卷不会被删除，mysql的数据依然存在
+sudo docker run --name mysql-docker -v mysql_data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:5.7   # 执行此命令时必须先执行上一条命令
+
+
+# 一般来说下面的命令用不上
+sudo docker exec -it mysql-docker /bin/bash   #进入MySQL容器 /bin/bash
+mysql -u root -p  # 进入容器里的mysql
+
+# 设置外部网络访问mysql权限  外部访问权限不够才执行
+ALTER user 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';  --sql语句
+FLUSH PRIVILEGES;    --sql语句
+```
+
