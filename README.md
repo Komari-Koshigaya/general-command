@@ -140,11 +140,13 @@ git status //查看仓库状态
 git log //查看历史记录
 
 
-git branch //查看当前所有的分支
-git branch name //创建分支
+git branch //查看本地所有的分支
+git branch -r  # 查看所有远程分支
+git branch name //基于当前分支新建name分支相当于复制了当前分支
 git checkout master //切换回master分支
 git checkout -b dev //创建dev分支 并切换到dev分支上
 git branch -d dev //删除dev分支
+git branch -dr origin/mat  # 删除origin对应远程仓库的mat分支
 
 git merge dev //在当前的分支上合并dev分支
 git clone https://github.com/zongyunqingfeng/testgit //从远程库中克隆
@@ -161,7 +163,10 @@ git push origin :stars//删除远程仓库的 stars分支
 git pull origin master //意思就是把远程最新的代码更新到本地。只有一个 gut pull即可。一般我们在push之前都会先pull这样不容易冲突
 
 git rm XX //删除XX文件
-git tag v1.0 //为当前文件贴上版本号
+git tag v1.0 //为当前commit贴上版本号
+git tag v1.0 commitid # 为 commitid对应的提交贴上版本号V1.0
+git tag -d v1.0  # 删除本地tag
+git push origin:refs/tags/v1.0  # 删除origin对应远程仓库的版本号v1.0
 git reflog    //查看历史记录的版本号id
 
 git diff readme.txt //只能比较当前文件和暂存区文件差异，什么是暂存区？就是你还没有执行git	add的文
@@ -259,6 +264,25 @@ git pull 失败 ,提示：fatal: refusing to merge unrelated histories
 *这种方法的好处是每次只需要*    `git push` *一次就行了。*
 
 ***推荐使用方法二***
+
+## git导出代码
+
+使用 git archive 可以将库中代码打包(一份干净的代码没有 .git 等)
+
+> ~~~shell
+> git archive --format tar.gz --output "./output.tar.gz" master
+> # 将master分支打包为output.tar.gz
+> # --format指明打包格式，若不指明此项，则根据--output中的文件名推断文件格式。所以你也可以将上述命令简化为:  
+> git archive --output "./output.tar.gz" master
+> 
+> git archive -l  # 查看支持的文件格式列表(tar,tgz,tar.gz,zip)
+> git archive --output "output.zip" 分支名  # 打包某个分支所有文件
+> git archive --output "output.zip" 提交id  # 打包某次提交(通过git log找到相应的 提交id)
+> 
+> git archive --output "output.zip" master dir dir2  # 打包master分支下dir目录下的dir2目录
+> ~~~
+>
+> #### ps： 打包建议在代码库的根目录下进行 
 
 # docker使用方法
 
