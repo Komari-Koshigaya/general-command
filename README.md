@@ -14,6 +14,24 @@
 >
 > 这样配置后，会通过ssh连接上本地虚拟机，并进入 配置的特定用户目录下
 
+# linux时间及时区设置
+
+```shell
+##### 设置 date命令 显示的时区
+date   # 查看当前时间  若显示 Mon Mar 23 14:01:05 EDT 2020 则代表时区是EDT美国东部时间(与北京时间的时差是 -12h)
+sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime   #将时区切换到中国 使用date将显示 类似 Tue Mar 24 02:04:49 CST 2020
+# sudo cp /usr/share/zoneinfo/America/New_York /etc/localtime  # 切换回EDT时区
+
+##### 永久修改系统时间
+sudo hwclock --set --date "2020-3-25 11:54:30"    # 修改硬件时间(每次重启linux，系统时间会等于硬件时间，故直接修改硬件时间)
+sudo hwclock --show  # 查看硬件时间
+sudo hwclock --hctosys   # 同步系统时间和硬件时间，即 将当前系统时间置为 硬件时间
+
+# 重启系统查看是否永久修改系统时间
+reboot  # 重启系统
+date    # 重启系统可以发现硬件时间和系统时间都修改成功
+```
+
 # Linux新建普通用户并赋予sudo权限
 
 ## 新建用户
