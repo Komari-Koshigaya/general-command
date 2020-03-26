@@ -30,7 +30,23 @@ sudo hwclock --hctosys   # 同步系统时间和硬件时间，即 将当前系�
 # 重启系统查看是否永久修改系统时间
 reboot  # 重启系统
 date    # 重启系统可以发现硬件时间和系统时间都修改成功
+
+sudo hwclock -w    # 将硬件时间置为当前系统时间
 ```
+
+> 注：virtualbox的虚拟机，默认每次开机会获得宿主机的本地时间，获得的时间会比宿主机***晚8个小时***，此时需要设置virtualbox，再***设置—系统里，取消勾中硬件时钟使用国际标准时间(UTC)***
+>
+> ![晚8个小时时配置VB](doc/vb_config_time_late.png)
+>
+> 另：每次fn+f12(即电脑进入***休眠***时间)，虚拟机里的时间(包括系统时间和硬件时间)会***停止计时***，这也就导致，休眠之后再唤醒电脑虚拟机里的时间仍是上回休眠之前的。
+>
+> 目前没什么好办法，只好休眠之前关闭虚拟机，或时间差一点不管，差得多虚拟机关闭再开。
+>
+> ## 总结
+>
+> virtualbox里 设置—系统—取消勾中硬件时钟使用国际标准时间(UTC)
+>
+> sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime   #将时区切换到中国 使用date将显示 类似 Tue Mar 24 02:04:49 CST 2020
 
 # Linux新建普通用户并赋予sudo权限
 
@@ -344,5 +360,47 @@ mysql -u root -p  # 进入容器里的mysql
 # 设置外部网络访问mysql权限  外部访问权限不够才执行
 ALTER user 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';  --sql语句
 FLUSH PRIVILEGES;    --sql语句
+```
+
+# linux定时任务 crontab
+
+```shell
+SHELL=/bin/bash 
+PATH=/sbin:/bin:/usr/sbin:/usr/bin 
+MAILTO=root 
+HOME=/ 
+# run-parts 
+01 * * * * root run-parts /etc/cron.hourly 
+02 4 * * * root run-parts /etc/cron.daily 
+22 4 * * 0 root run-parts /etc/cron.weekly 
+42 4 1 * * root run-parts /etc/cron.monthly
+# run-parts 中：
+第一段应该定义的是：分钟，表示每个小时的第几分钟来执行。范围是从0-59 <br>第二段应该定义的是：小时，表示从第几个小时来执行，范围是从0-23
+第三段应该定义的是：日期，表示从每个月的第几天执行，范围从1-31
+第四段应该定义的是：月，表示每年的第几个月来执行，范围从1-12
+第五段应该定义的是：周，表示每周的第几天执行，范围从0-6，其中 0表示星期日。
+每六段应该定义的是：用户名，也就是执行程序要通过哪个用户来执行，这个一般可以省略；
+第七段应该定义的是：执行的命令和参数。
+
+方法一：
+设置服务器定时启动
+vim/etc/ crontab
+#reboot 设定每天10：30重新启动 
+30 10 * * * root /sbin/reboot
+重新加载配置
+/sbin/service crond reload
+重启cron
+/sbin/service crond restart
+
+　
+
+### 方法二：
+直接在命令行下执行
+crontab  -e  # 添加定时
+*/10 17-18 * * * root tcpdump -i eth0 tcp port 80 -s 0 -w sohu1.txt
+wq退出
+crontab -r   # 删除任务
+crontab -l    # 显示任务
+比如tcpdump 还在后台运行，则可以用killall tcpdump 
 ```
 
