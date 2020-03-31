@@ -169,10 +169,10 @@ git常用命令
 git init //把当前的目录变成可以管理的git仓库，生成隐藏文件 .git。
 git add XX //把xx文件添加到暂存区去。
 git add .                     //git add将当前目录所有文件提交到暂存区：
-git commit -m           "注释信息"//将暂存区的所有文件提交到仓库   多行注释需要使用  git commit
+git commit -m "注释信息" //将暂存区的所有文件提交到仓库   多行注释需要使用  git commit
 git status //查看仓库状态
-git log //查看历史记录
-
+git log //查看所有提交记录，包括远程仓库的提交记录
+git reflog    //查看本地操作记录，包括提交和回退记录，最前面的数字是该记录所处的提交id
 
 git branch //查看本地所有的分支
 git branch -r  # 查看所有远程分支
@@ -206,7 +206,7 @@ git tag v1.0 //为当前commit贴上版本号
 git tag v1.0 commitid # 为 commitid对应的提交贴上版本号V1.0
 git tag -d v1.0  # 删除本地tag
 git push origin:refs/tags/v1.0  # 删除origin对应远程仓库的版本号v1.0
-git reflog    //查看历史记录的版本号id
+
 
 git diff readme.txt //只能比较当前文件和暂存区文件差异，什么是暂存区？就是你还没有执行git	add的文
 git diff <$id1>	<$id2>			//比较两次提交之间的差异 
@@ -214,7 +214,7 @@ git diff <branch1>..<branch2>	//在两个分支之间比较
 git diff --staged			//比较暂存区和版本库差异
 
 git reset -hard HEAD^ 或者 git reset -hard HEAD~                //回退到上一个版本 (如果想回退到100个版本，使用git reset -hard HEAD~100 )
-git reset --hard 版本号  //根据版本号恢复 若之前使用了git tag v1.0 可直接 git reset --hard v1.0
+git reset --hard 版本号/提交id  //根据版本号恢复 若之前使用了git tag v1.0 可直接 git reset --hard v1.0，回退之后 git log将无法看到后来的提交，可使用 git reflog 查看所有本地操作记录，根据操作的所处的提交id返回到 任意提交
 
 git checkout -- readme.txt //把readme.txt文件在工作区做的修改全部撤销
 	这里有2种情况，如下： 
