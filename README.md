@@ -383,10 +383,13 @@ git pull 失败 ,提示：fatal: refusing to merge unrelated histories
 
 查看远程仓库情况。可以看到 github 远程仓库有两个 push 地址。
 
-`[niejun@localhost lab]$ git remote -v`
-`origin  git@gitee.com:komari/apue-lab.git (fetch)`
-`origin  git@gitee.com:komari/apue-lab.git (push)`
-`origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)`
+~~~shell
+[niejun@localhost lab4 14:27:36]$git remote -v
+origin  git@gitee.com:komari/apue-lab.git (fetch)
+origin  git@gitee.com:komari/apue-lab.git (push)
+origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
+## 注fetch只能同时存在一个，push地址可以有多个，且fetch地址与 [remote "origin"]的第一条url相同
+~~~
 
 *这种方法的好处是每次只需要*    `git push` *一次就行了。*
 
