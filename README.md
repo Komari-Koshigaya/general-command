@@ -14,7 +14,9 @@
 >
 > 这样配置后，会通过ssh连接上本地虚拟机，并进入 配置的特定用户目录下
 
-# linux时间及时区设置
+# Linux命令
+
+## linux时间及时区设置
 
 ```shell
 ##### 设置 date命令 显示的时区
@@ -48,7 +50,7 @@ sudo hwclock -w    # 将硬件时间置为当前系统时间
 >
 > sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime   #将时区切换到中国 使用date将显示 类似 Tue Mar 24 02:04:49 CST 2020
 
-# 修改Linux终端命令提示符
+## 修改Linux终端命令提示符
 
 > 1.设置提示符格式——PS1
 >
@@ -116,9 +118,9 @@ sudo hwclock -w    # 将硬件时间置为当前系统时间
 >
 > 这样就可以永久性的改变终端命令行格式了。
 
-# Linux新建普通用户并赋予sudo权限
+## Linux新建普通用户并赋予sudo权限
 
-## 查看当前系统所有用户
+### 查看当前系统所有用户
 
 ~~~shell
 cat /etc/passwd  # 看第三个参数:500以上的,就是后面建的用户了.其它则为系统的用户.
@@ -126,7 +128,7 @@ cat /etc/group  # 看第三个参数:500以上的,就是后面建的用户组了
 groups  # 查看当前用户所在的用户组还有哪些用户
 ~~~
 
-## 新建用户
+### 新建用户
 
 ```shell
 su root    # 切换到root用户，新建用户需root权限，若当前登录时root账号，则无需此操作
@@ -135,7 +137,7 @@ passwd niejun # 修改默认密码（若输入的密码很简单会提示，忽�
 ## 默认情况下创建一个用户账号a，会创建一个/home/a目录和一个用户邮箱/var/spool/mail/a
 ```
 
-## 为新用户授予 sudo权限
+### 为新用户授予 sudo权限
 
 1. 查找授权管理文件sudoers
 
@@ -169,7 +171,7 @@ passwd niejun # 修改默认密码（若输入的密码很简单会提示，忽�
 	chmod -v u-w /etc/sudoers    #收回当前用户对 /etc/sudoers 文件的写权限
 	~~~
 
-## 用户切换	
+### 用户切换
 
 ```
 su niejun  # 切换到用户 niejun
@@ -179,7 +181,7 @@ groups niejun   # 查看 用户 niejun 所属的用户组
 su  # 切换到root用户，或者键入 su root
 ```
 
-## 删除用户
+### 删除用户
 
 ~~~shell
 ## 若使用userdel haha 命令删除该用户时，并不能删除该用户的所有信息，只是删除了/etc/passwd、/etc/shadow、/etc/group/、/etc/gshadow四个文件里的该账户和组的信息。
@@ -188,7 +190,7 @@ userdel -r haha # 删除 用户 haha 相关的文件
 sudo find / -name "*haha*"  # 查看 用户 haha 有哪些相关文件, 可以看到相关文件都已删除
 ~~~
 
-## 可能出现的问题
+### 可能出现的问题
 
 > 1.创建用户时提示用户已存在，确定不需要该用户的所有文件或者上次删除用户不干净，需要重新使用上面的删除用户命令。
 >
@@ -200,7 +202,60 @@ sudo find / -name "*haha*"  # 查看 用户 haha 有哪些相关文件, 可以�
 >
 > 代表缺少 .bashrc 和 .bash_profile 文件，可从 /root 或 /home/xxuser 下复制这两个文件到 /home/niejun 下
 
+## linux定时任务 crontab
 
+```shell
+SHELL=/bin/bash 
+PATH=/sbin:/bin:/usr/sbin:/usr/bin 
+MAILTO=root 
+HOME=/ 
+# run-parts 
+01 * * * * root run-parts /etc/cron.hourly 
+02 4 * * * root run-parts /etc/cron.daily 
+22 4 * * 0 root run-parts /etc/cron.weekly 
+42 4 1 * * root run-parts /etc/cron.monthly
+# run-parts 中：
+第一段应该定义的是：分钟，表示每个小时的第几分钟来执行。范围是从0-59 <br>第二段应该定义的是：小时，表示从第几个小时来执行，范围是从0-23
+第三段应该定义的是：日期，表示从每个月的第几天执行，范围从1-31
+第四段应该定义的是：月，表示每年的第几个月来执行，范围从1-12
+第五段应该定义的是：周，表示每周的第几天执行，范围从0-6，其中 0表示星期日。
+每六段应该定义的是：用户名，也就是执行程序要通过哪个用户来执行，这个一般可以省略；
+第七段应该定义的是：执行的命令和参数。
+
+方法一：
+设置服务器定时启动
+vim/etc/ crontab
+#reboot 设定每天10：30重新启动 
+30 10 * * * root /sbin/reboot
+重新加载配置
+/sbin/service crond reload
+重启cron
+/sbin/service crond restart
+
+　
+
+### 方法二：
+直接在命令行下执行
+crontab  -e  # 添加定时
+*/10 17-18 * * * root tcpdump -i eth0 tcp port 80 -s 0 -w sohu1.txt
+wq退出
+crontab -r   # 删除任务
+crontab -l    # 显示任务
+比如tcpdump 还在后台运行，则可以用killall tcpdump 
+```
+
+## 软件安装、卸载
+
+~~~shell
+## 如果要查找某软件包是否安装，用 rpm -qa | grep “软件或者包的名字”
+rpm -qa | grep docker # 安装docker之前查看是否安装
+
+yum install ntp  #安装 ntp
+
+# rpm -e 文件名 卸载packpage-name软件，若该软件有服务在后台运行需先停止，若此命令提示依赖包错误，可以使用 rpm -e packpage-name --nodeps
+# 卸载一般结合rpm -qa | grep packpage-name 来获取需要卸载的软件包名
+rpm -e MySQL-server-5.6.25-1.e16.x86_64  # 卸载mysql服务端
+~~~
 
 # git操作命令
 
@@ -467,47 +522,5 @@ mysql -u root -p  # 进入容器里的mysql
 # 设置外部网络访问mysql权限  外部访问权限不够才执行
 ALTER user 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';  --sql语句
 FLUSH PRIVILEGES;    --sql语句
-```
-
-# linux定时任务 crontab
-
-```shell
-SHELL=/bin/bash 
-PATH=/sbin:/bin:/usr/sbin:/usr/bin 
-MAILTO=root 
-HOME=/ 
-# run-parts 
-01 * * * * root run-parts /etc/cron.hourly 
-02 4 * * * root run-parts /etc/cron.daily 
-22 4 * * 0 root run-parts /etc/cron.weekly 
-42 4 1 * * root run-parts /etc/cron.monthly
-# run-parts 中：
-第一段应该定义的是：分钟，表示每个小时的第几分钟来执行。范围是从0-59 <br>第二段应该定义的是：小时，表示从第几个小时来执行，范围是从0-23
-第三段应该定义的是：日期，表示从每个月的第几天执行，范围从1-31
-第四段应该定义的是：月，表示每年的第几个月来执行，范围从1-12
-第五段应该定义的是：周，表示每周的第几天执行，范围从0-6，其中 0表示星期日。
-每六段应该定义的是：用户名，也就是执行程序要通过哪个用户来执行，这个一般可以省略；
-第七段应该定义的是：执行的命令和参数。
-
-方法一：
-设置服务器定时启动
-vim/etc/ crontab
-#reboot 设定每天10：30重新启动 
-30 10 * * * root /sbin/reboot
-重新加载配置
-/sbin/service crond reload
-重启cron
-/sbin/service crond restart
-
-　
-
-### 方法二：
-直接在命令行下执行
-crontab  -e  # 添加定时
-*/10 17-18 * * * root tcpdump -i eth0 tcp port 80 -s 0 -w sohu1.txt
-wq退出
-crontab -r   # 删除任务
-crontab -l    # 显示任务
-比如tcpdump 还在后台运行，则可以用killall tcpdump 
 ```
 
