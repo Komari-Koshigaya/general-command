@@ -524,3 +524,249 @@ ALTER user 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';  --sql�
 FLUSH PRIVILEGES;    --sql语句
 ```
 
+# node.js
+
+> ###### 安装node.js
+>
+> 1. 进入[node.js官网](https://nodejs.org/en/download/), 下载 linux 版本的源码
+>
+> ![官网下载截图](doc/node.js_install_1.png)
+>
+> 2. 通过ftp工具上传到 linux，解压安装包
+>
+> ~~~shell
+> tar -xvf node-v10.16.0-linux-x64.tar.xz
+> 
+> ## 3. 移动并改名文件夹（可选）
+> mv xx/node-v10.16.0-linux-64 /usr/local/src/nodejs
+> ~~~
+>
+> 3. 让npm和node命令全局生效
+>
+> 　　方式一：环境变量方式（推荐）√
+>
+> 　　1）加入环境变量，在 /etc/profile 文件末尾增加配置
+>
+> ```shell
+> su  // 切换到root账户
+> vi /ect/profile
+> export PATH=$PATH:/usr/local/nodejs/bin  ## 后面的路径是node.js的安装目录
+> ```
+>
+> 　　2）执行命令使配置文件生效
+>
+> ```shell
+> source /etc/profile
+> su niejun //切换回普通用户
+> ```
+>
+> 　　方式二：软链接方式
+>
+> ```shell
+> ln -s /usr/local/nodejs/bin/npm /usr/local/bin/
+> ln -s /usr/local/nodejs/bin/node /usr/local/bin/     ## 后面的路径是node.js的安装目录
+> ```
+>
+> 4. 查看nodejs是否安装成功
+>
+> ```shell
+> node -v  	//成功会显示版本号
+> npm -v		//成功会显示版本号
+> ```
+>
+> 5.  为npm添加淘宝镜像 (非必须项)
+>
+>    npm config set registry https://registry.npm.taobao.org
+>    完成后可以使用：
+>
+>    npm config get registry
+>    查看修改结果。
+>
+>    
+>
+>     使用淘宝npm镜像的cnpm（本文使用的方法）
+>
+>    因为下载都是国外服务器很慢会掉线，我们需要使用淘宝的npm镜像cnpm。执行命令：
+>
+>    npm install -g cnpm --registry=https://registry.npm.taobao.org
+>    启用淘宝的npm镜像cnpm，注意：启用后当我们要输入npm命令时，就需要输入cnpm
+>
+> PS: 通过 npm 安装的库，都在 node.js的根目录/lib/node_modules,eg: /home/niejun/nodejs/lib/node_modules/truffle   
+
+## 使用 npm 命令安装模块
+
+npm 安装 Node.js 模块语法格式如下：
+
+```
+$ npm install <Module Name>
+```
+
+以下实例，我们使用 npm 命令安装常用的 Node.js web框架模块 **express**:
+
+```
+$ npm install express
+```
+
+安装好之后，express 包就放在了工程目录下的 node_modules 目录中，因此在代码中只需要通过 **require('express')** 的方式就好，无需指定第三方包路径。
+
+```
+var express = require('express');
+```
+
+### 查看安装信息
+
+你可以使用以下命令来查看所有全局安装的模块：
+
+```
+$ npm list -g
+
+├─┬ cnpm@4.3.2
+│ ├── auto-correct@1.0.0
+│ ├── bagpipe@0.3.5
+│ ├── colors@1.1.2
+│ ├─┬ commander@2.9.0
+│ │ └── graceful-readlink@1.0.1
+│ ├─┬ cross-spawn@0.2.9
+│ │ └── lru-cache@2.7.3
+……
+```
+
+如果要查看某个模块的版本号，可以使用命令如下：
+
+```
+$ npm list grunt
+
+projectName@projectVersion /path/to/project/folder
+└── grunt@0.4.1
+```
+
+------
+
+## 使用 package.json
+
+package.json 位于模块的目录下，用于定义包的属性。接下来让我们来看下 express 包的 package.json 文件，位于 node_modules/express/package.json 内容：
+
+```json
+{
+  "name": "express",
+  "description": "Fast, unopinionated, minimalist web framework",
+  "version": "4.13.3",
+  "author": {
+    "name": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca"
+  },
+  "contributors": [
+    {
+      "name": "Aaron Heckmann",
+      "email": "aaron.heckmann+github@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/strongloop/express.git"
+  },
+  "homepage": "http://expressjs.com/",
+  "keywords": [
+    "express",
+    "framework",
+    "sinatra",
+    "web",
+    "rest",
+    "restful",
+    "router",
+    "app",
+    "api"
+  ],
+  "dependencies": {
+    "accepts": "~1.2.12"
+  },
+  "devDependencies": {
+    "after": "0.8.1"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "files": [
+    "LICENSE",
+    "History.md",
+    "index.js",
+    "lib/"
+  ],
+  "scripts": {
+    "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/ test/acceptance/"
+  },
+  "gitHead": "ef7ad681b245fba023843ce94f6bcb8e275bbb8e",
+  "bugs": {
+    "url": "https://github.com/strongloop/express/issues"
+  },
+  "_id": "express@4.13.3",
+  "_shasum": "ddb2f1fb4502bf33598d2b032b037960ca6c80a3",
+  "_from": "express@*",
+  "_npmVersion": "1.4.28",
+  "_npmUser": {
+    "name": "dougwilson",
+    "email": "doug@somethingdoug.com"
+  },
+  "maintainers": [
+    {
+      "name": "tjholowaychuk",
+      "email": "tj@vision-media.ca"
+    }
+  ],
+  "dist": {
+    "shasum": "ddb2f1fb4502bf33598d2b032b037960ca6c80a3",
+    "tarball": "http://registry.npmjs.org/express/-/express-4.13.3.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/express/-/express-4.13.3.tgz",
+  "readme": "ERROR: No README data found!"
+}
+```
+
+### Package.json 属性说明
+
+- **name** - 包名。
+- **version** - 包的版本号。
+- **description** - 包的描述。
+- **homepage** - 包的官网 url 。
+- **author** - 包的作者姓名。
+- **contributors** - 包的其他贡献者姓名。
+- **dependencies** - 依赖包列表。如果依赖包没有安装，npm 会自动将依赖包安装在 node_module 目录下。
+- **repository** - 包代码存放的地方的类型，可以是 git 或 svn，git 可在 Github 上。
+- **main** - main 字段指定了程序的主入口文件，require('moduleName') 就会加载这个文件。这个字段的默认值是模块根目录下面的 index.js。
+- **keywords** - 关键字
+
+## 卸载模块
+
+我们可以使用以下命令来卸载 Node.js 模块。
+
+```
+$ npm uninstall express
+```
+
+卸载后，你可以到 /node_modules/ 目录下查看包是否还存在，或者使用以下命令查看：
+
+```
+$ npm ls
+```
+
+------
+
+## 更新模块
+
+我们可以使用以下命令更新模块：
+
+```
+$ npm update express
+```
+
+------
+
+## 搜索模块
+
+使用以下来搜索模块：
+
+```
+$ npm search express
+```
