@@ -302,6 +302,8 @@ rpm -e MySQL-server-5.6.25-1.e16.x86_64  # 卸载mysql服务端
 
 # git操作命令
 
+> [git在线练习工具](https://learngitbranching.js.org/?locale=zh_CN)  [对某命令不太理解时，推荐使用学习，里面有图示，清晰、易理解]
+
 ## .gitconfig
 
 是git的全局配置文件，已配置好 git log的显示效果、显示中文文件名，linux系统将其复制到当前用户根目录 /home/xxx 即可。
