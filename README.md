@@ -300,6 +300,29 @@ yum install ntp  #安装 ntp
 rpm -e MySQL-server-5.6.25-1.e16.x86_64  # 卸载mysql服务端
 ~~~
 
+## 查看linux系统版本
+
+> **uname -a**  # 查看内核版本**[可用]**
+>
+> [niejun@localhost ~ 21:58:24]$uname -a
+> Linux localhost.localdomain 3.10.0-1062.12.1.el7.x86_64 #1 SMP Tue Feb 4 23:02:59 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+>
+>  **cat /etc/redhat-release**   # 查看系统版本**[可用]**
+>
+> [niejun@localhost ~ 21:59:13]$cat /etc/redhat-release
+> CentOS Linux release 7.7.1908 (Core)
+>
+> 
+>
+> **lsb_release -a**，即可列出所有版本信息：
+>
+> > [root@S-CentOS ~]# lsb_release -a
+> > LSB Version: :base-4.0-amd64:base-4.0-noarch:core-4.0-amd64:core-4.0-noarch:graphics-4.0-amd64:graphics-4.0-noarch:printing-4.0-amd64:printing-4.0-noarch
+> > Distributor ID: CentOS
+> > Description: CentOS release 6.5 (Final)
+> > Release: 6.5
+> > Codename: Final
+
 # git操作命令
 
 > [git在线练习工具](https://learngitbranching.js.org/?locale=zh_CN)  [对某命令不太理解时，推荐使用学习，里面有图示，清晰、易理解]
