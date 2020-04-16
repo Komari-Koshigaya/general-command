@@ -505,6 +505,23 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 >
 > ![git-cz截图	](doc/git-cz_result.png)
 
+## 根据 commit自动生成 changelog.md
+
+> 需要先安装node.js，且 commit 历史记录是符合规范的，如使用上面介绍的 git-cz 提交
+>
+> ~~~bash
+> npm install -g conventional-changelog-cli  # 安装工具到全局
+> 
+> # 在git项目根目录下执行下列命令，生成的changelog.md也在根目录下
+> conventional-changelog -p angular -i CHANGELOG.md -s  # 不会覆盖以前的 Change log，只会在 CHANGELOG.md 的头部加上所有changelog
+> # [若因为之前执行过下面这条指令，又删除了 changelog.md，可先执行该指令]
+> 
+> conventional-changelog -p angular -i CHANGELOG.md -s   # 不会覆盖以前的 Change log，只会在 CHANGELOG.md 的头部加上自从上次发布以来的变动
+> 
+> conventional-changelog -p angular -i CHANGELOG.md -w -r 0 # 命令行打印所有发布的 Change log
+> ~~~
+> ![changelog.md截图](doc/conventional-changelog_result.png)
+
 ## git导出代码
 
 使用 git archive 可以将库中代码打包(一份干净的代码没有 .git 等)
