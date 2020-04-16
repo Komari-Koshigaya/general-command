@@ -495,6 +495,16 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 
 ***推荐使用方法二***
 
+## git-cz规范提交信息
+
+> 需要先安装node.js, 安装方法见  [如何安装node.js](#node.js), 而后安装 git-cz
+>
+> `npm install -g git-cz`  # 建议加上 -g ,这样不用每个git项目都安装一次
+>
+> 之后提交时用 **git cz** 代替 git commit 
+>
+> ![git-cz截图	](doc/git-cz_result.png)
+
 ## git导出代码
 
 使用 git archive 可以将库中代码打包(一份干净的代码没有 .git 等)
@@ -642,8 +652,8 @@ FLUSH PRIVILEGES;    --sql语句
 
 npm 安装 Node.js 模块语法格式如下：
 
-```
-$ npm install <Module Name>
+```bash
+$ npm install -g <Module Name>  # -g 代表安装到全局，即node.js根目录下/lib/nodemodules,  不加代表安装到当前目录
 ```
 
 以下实例，我们使用 npm 命令安装常用的 Node.js web框架模块 **express**:
@@ -786,14 +796,15 @@ package.json 位于模块的目录下，用于定义包的属性。接下来让�
 
 我们可以使用以下命令来卸载 Node.js 模块。
 
-```
-$ npm uninstall express
+```bash
+$ npm uninstall express # 删除当前目录下安装的模块 express
+npm uninstall -g express  # 删除全局模块 express
 ```
 
 卸载后，你可以到 /node_modules/ 目录下查看包是否还存在，或者使用以下命令查看：
 
-```
-$ npm ls
+```bash
+$ npm ls  # 该命令是查看当前目录下存在哪些包
 ```
 
 ------
@@ -812,6 +823,6 @@ $ npm update express
 
 使用以下来搜索模块：
 
-```
+```bash
 $ npm search express
 ```
