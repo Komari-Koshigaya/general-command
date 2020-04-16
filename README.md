@@ -497,7 +497,7 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 
 ## git-cz规范提交信息
 
-> 需要先安装node.js, 安装方法见  [如何安装node.js](#node.js), 而后安装 git-cz
+> 需要先安装node.js, 安装方法见  [如何安装node.js](#nodejs), 而后安装 git-cz
 >
 > `npm install -g git-cz`  # 建议加上 -g ,这样不用每个git项目都安装一次
 >
