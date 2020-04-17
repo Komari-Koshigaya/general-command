@@ -600,6 +600,10 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 
 `service docker start` //启动docker服务
 
+若出现 启动不了的情况考虑是内核版本过低的原因，使用
+
+ **sudo yum update**  # 更新内核版本,即可启动docker服务， 亲测 3.10.0-327启动不了，升级后3.10.0-1062可以启动
+
 ```shell
 安装docker
 yum -y install docker-io //权限不够则需加上 sudo
@@ -660,8 +664,8 @@ FLUSH PRIVILEGES;    --sql语句
 >
 > ```shell
 > su  // 切换到root账户
-> vi /ect/profile
-> export PATH=$PATH:/usr/local/nodejs/bin  ## 后面的路径是node.js的安装目录
+> vi /etc/profile  # 必须切换到root账户，sudo都不行
+> export PATH=$PATH:/home/niejun/nodejs/bin  ## 后面的路径是node.js的安装目录
 > ```
 >
 > 　　2）执行命令使配置文件生效
