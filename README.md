@@ -584,6 +584,22 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 
 详见   [如何使用docker部署springboot项目](https://github.com/Komari-Koshigaya/university-services-with-miniprogram)
 
+#### 安装docker
+
+`yum -y install docker-io` //权限不够则需加上 sudo
+
+`docker version` //查看是否安装成功，出现版本号则成功
+
+`vi /etc/docker/daemon.json` //设置docker镜像，若已开启服务修改后重启服务方生效
+
+```
+{
+    "registry-mirrors": ["http://hub-mirror.c.163.com","https://pee6w651.mirror.aliyuncs.com","https://docker.mirrors.ustc.edu.cn"]
+}
+```
+
+`service docker start` //启动docker服务
+
 ```shell
 安装docker
 yum -y install docker-io //权限不够则需加上 sudo
