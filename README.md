@@ -547,14 +547,23 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 > npm install -g conventional-changelog-cli  # 安装工具到全局
 > 
 > # 在git项目根目录下执行下列命令，生成的changelog.md也在根目录下
-> conventional-changelog -p angular -i CHANGELOG.md -s  # 不会覆盖以前的 Change log，只会在 CHANGELOG.md 的头部加上所有changelog
+> conventional-changelog -p angular -i CHANGELOG.md -s -p  # 追加模式，在 CHANGELOG.md 的头部加上所有changelog
 > # [若因为之前执行过下面这条指令，又删除了 changelog.md，可先执行该指令]
 > 
-> conventional-changelog -p angular -i CHANGELOG.md -s   # 不会覆盖以前的 Change log，只会在 CHANGELOG.md 的头部加上自从上次发布以来的变动
+> conventional-changelog -p angular -i CHANGELOG.md -s   # 追加模式，在 CHANGELOG.md 的头部加上自从上次发布以来的变动
 > 
-> conventional-changelog -p angular -i CHANGELOG.md -w -r 0 # 命令行打印所有发布的 Change log
+> conventional-changelog -p angular -i CHANGELOG.md -w -r 0 # 生成所有发布的 Change log
 > ~~~
-> ![changelog.md截图](doc/conventional-changelog_result.png)
+> ![changelog.md截图](doc/conventional-changelog_result_1.png)
+> ![changelog.md截图](doc/conventional-changelog_result_1.png)
+>
+> ***简化上述代码***
+>
+> 修改当前用户的 .bashrc，如 /home/niejun/.bashrc
+>
+> 在最后一行加入 `alias log='conventional-changelog -p angular -i CHANGELOG.md'  # 根据git的提交信息自动生成日志`
+>
+> 然后 `source ~/.bashrc`使改动生效，以后只需输入 log -s 、 log -s -p、log -w -r 0
 
 ## git导出代码
 
