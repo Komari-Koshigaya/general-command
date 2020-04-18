@@ -1,2 +1,5 @@
 # c program
 *.o
+
+#日志文件
+CHANGELOG.md
