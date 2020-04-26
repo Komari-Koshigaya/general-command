@@ -604,13 +604,13 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 
 详见   [如何使用docker部署springboot项目](https://github.com/Komari-Koshigaya/university-services-with-miniprogram)
 
-#### 安装docker
+## 安装docker
 
 `yum -y install docker-io` //权限不够则需加上 sudo
 
 `docker version` //查看是否安装成功，出现版本号则成功
 
-`vi /etc/docker/daemon.json` //设置docker镜像，若已开启服务修改后重启服务方生效
+`sudo vi /etc/docker/daemon.json` //设置docker镜像，若已开启服务修改后重启服务方生效
 
 ```
 {
@@ -647,7 +647,7 @@ sudo docker start main
 
 # mysql 容器
 sudo docker volume create mysql_data  #创建数据卷用来保存mysql的数据，可多个容器共享一个数据卷，当容器被删除时，数据卷不会被删除，mysql的数据依然存在
-sudo docker run --name mysql-docker -v mysql_data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:5.7   # 执行此命令时必须先执行上一条命令
+sudo docker run --name mysql-docker -v mysql_data:/home/niejun/var/db/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:5.7   # 执行此命令时必须先执行上一条命令
 
 
 # 一般来说下面的命令用不上
@@ -657,7 +657,33 @@ mysql -u root -p  # 进入容器里的mysql
 # 设置外部网络访问mysql权限  外部访问权限不够才执行
 ALTER user 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';  --sql语句
 FLUSH PRIVILEGES;    --sql语句
+
+#删除镜像和容器
+sudo docker stop contain-id  # 根据容器id停止容器，删除前先停止运行
+sudo docker rm contain-id  # 删除容器
+sudo docker rm image image-id # 删除镜像
 ```
+
+## 安装运行MongoDB
+
+~~~bash
+sudo docker search mongodb  # 查看mongodb的可用版本
+sudo docker pull mongo  # 拉取官方最新版本的镜像,mongodb的镜像名是 mongo
+sudo docker images  # 查看是否已安装mongodb
+
+# 运行容器 
+# -p 27017:27017 ：映射容器服务的 27017 端口到宿主机的 27017 端口。外部可以直接通过 宿主机 ip:27017 访问到 mongo 的服务。
+# --auth：需要密码才能访问容器服务。
+# -v ~/var/db:/data/db 将~/var/db 目录绑定到容器的/data/db
+sudo docker run -itd --name mongo -p 27017:27017 mongo --auth
+sudo docker run -p 27017:27017 -v ~/var/db:/data/db -d mongo
+
+sudo docker exec -it mongo mongo admin # 以下命令添加用户和设置密码，并且尝试连接。
+# 创建一个名为 admin，密码为 123456 的用户。
+>  db.createUser({ user:'admin',pwd:'123456',roles:[ { role:'userAdminAnyDatabase', db: 'admin'}]});
+# 尝试使用上面创建的用户信息进行连接。
+> db.auth('admin', '123456')
+~~~
 
 # node.js
 
