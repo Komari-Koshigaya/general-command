@@ -662,6 +662,18 @@ FLUSH PRIVILEGES;    --sql语句
 sudo docker stop contain-id  # 根据容器id停止容器，删除前先停止运行
 sudo docker rm contain-id  # 删除容器
 sudo docker rm image image-id # 删除镜像
+
+sudo docker volume create my-vol # 创建一个数据卷
+sudo docker volume ls # 查看所有的 数据卷
+# 启动一个挂载数据卷的容器
+sudo docker run -d -P --name web \
+    # -v my-vol:/wepapp \
+    --mount source=my-vol,target=/webapp \
+    training/webapp python app.py
+sudo docker inspect web # 查看数据卷的具体信息,web是数据卷挂在的容器名
+ 
+sudo docker volume my-vol # 删除数据卷
+sudo docker volume prune # 清理无主的数据卷
 ```
 
 ## 安装运行MongoDB
@@ -676,13 +688,15 @@ sudo docker images  # 查看是否已安装mongodb
 # --auth：需要密码才能访问容器服务。
 # -v ~/var/db:/data/db 将~/var/db 目录绑定到容器的/data/db
 sudo docker run -itd --name mongo -p 27017:27017 mongo --auth
-sudo docker run -p 27017:27017 -v ~/var/db:/data/db -d mongo
+## sudo docker run  --name mongo -v /home/niejun/var/db:/data/db -p 27017:27017 -itd mongo --auth # 报错 find: '/data/db': Permission denied
+sudo docker run  --name mongo -v mongo_data:/home/niejun/var/db -p 27017:27017 -itd mongo --auth
+
 
 sudo docker exec -it mongo mongo admin # 以下命令添加用户和设置密码，并且尝试连接。
 # 创建一个名为 admin，密码为 123456 的用户。
->  db.createUser({ user:'admin',pwd:'123456',roles:[ { role:'userAdminAnyDatabase', db: 'admin'}]});
+>  db.createUser({ user:'root',pwd:'123456',roles:[ { role:'root', db: 'admin'}]});
 # 尝试使用上面创建的用户信息进行连接。
-> db.auth('admin', '123456')
+> db.auth('root', '123456')
 ~~~
 
 # node.js
@@ -932,3 +946,75 @@ $ npm update express
 ```bash
 $ npm search express
 ```
+
+# MongoDB的用法
+
+## 基本操作及概念
+
+~~~bash
+// database->collection->document
+show databases  // 显示所有的数据库
+db  // 查看当前所处的数据库
+show collections  // 显示数据库中所有的集合
+use test; // 使用test数据库库，该数据库可以不存在
+~~~
+
+## CRUD
+
+### 插入操作
+
+~~~shell
+// 插入操作
+db.stu.insert({name:"张三",age:18,gender:"男"})  // 向名字为stu的集合插入新的文档{name:"张三",age:18,gender:"男"}；该集合事先可以不存在
+db.stu.insert([
+		{fav:89,age:'DD',gender:"男"},
+		{family:"摇摇乐",num:4,gender:"男"},
+])  // 向名字为stu的集合插入多个文档
+~~~
+
+### 查询操作
+
+~~~shell
+//查询操纵
+db.stu.find()  // 查询集合stu的所有文档
+db.stu.find({family:"摇摇乐",num:5})  //多条件查询db.stu.find({family:"摇摇乐",num:4})[2]  //多条件查询,取第3个文档
+db.stu.find({family:"摇摇乐",num:4}).count()  //多条件查询，统计有多少条数据
+~~~
+
+### 更新操作
+
+~~~shell
+//更新操作，update()默认只改查询到的第一条文档
+db.stu.update({name:"张三"},{age:28}); //update()默认情况下会使用新对象替换旧对象，此操作结束后 源对象有 _id 和 age两个属性
+db.stu.update({
+    name: "张三"
+}, {
+    $set: {
+        age: 28
+    }
+}); //通过 $set:{} 来达到更新指定属性或添加新属性
+
+db.stu.update({
+    name: "张三"
+}, {
+    $unset: {
+        age: 28
+    }
+}); //通过 $unset:{} 来达到删除指定属性，age后的取值没影响
+db.stu.updateMany({name:"张三"},{$set:{age:5}}); //更改符合条件的所有文档
+db.stu.update({name:"张三"},{$set:{age:8}},{multi:true}); //更改符合条件的所有文档,不推荐使用
+~~~
+
+### 删除操作
+
+~~~shell
+//删除文档操作 db.collection.remove()    db.collection.deleteOne()      db.collection.deleteMany()
+db.stu.remove({family:"李四"})  //默认删除符合条件的所有文档 = db.stu.deleteMany({family:"李四"})
+
+db.stu.remove({age:8},true)  //第二个参数传入true则删除符合条件的一个文档 =  db.stu.deleteOne({age:8})
+db.stu.remove({})   //若只传入一个空对象，则删除所有文档(性能略差)
+
+db.stu.drop()  //删除集合,若数据库只有这一个集合，则会同时删除数据库
+db.dropDatabase() //删除当前数据库
+~~~
+
