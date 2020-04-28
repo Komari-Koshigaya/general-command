@@ -699,6 +699,24 @@ sudo docker exec -it mongo mongo admin # 以下命令添加用户和设置密码
 > db.auth('root', '123456')
 ~~~
 
+## 安装运行 Redis
+
+~~~shell
+sudo docker search redis  # redis
+sudo docker pull redis  # 拉取官方最新版本的镜像
+sudo docker images  # 查看是否已安装redis
+
+# 运行容器 
+# -p 6379:6379 ：映射容器服务的 6379 端口到宿主机的 6379 端口。外部可以直接通过 宿主机 ip:6379 访问到 mongo 的服务。
+sudo docker run -itd --name redis -p 6379:6379 redis
+sudo docker run -p 6379:6379 -v /home/niejun/var/db/redis:/data -v /home/niejun/var/db/redis/redis.conf:/etc/redis/redis.conf --name redis -d redis redis-server /etc/redis/redis.conf
+
+
+
+sudo docker exec -it redis redis-cli # 通过 redis-cli 连接测试使用 redis 服务
+
+~~~
+
 # node.js
 
 > ###### 安装node.js
@@ -958,7 +976,7 @@ db  // 查看当前所处的数据库
 show collections  // 显示数据库中所有的集合
 use test; // 使用test数据库库，该数据库可以不存在
 
-//MongoDB支持声明变量和运算符如 
+//MongoDB支持JavaScript语法
 var a=9  
 a+1  //将打印出10
 ~~~
@@ -1146,3 +1164,20 @@ db.dropDatabase() //删除当前数据库
 >多对多：将一对多的外键写成数组
 >
 >
+
+# Redis的用法
+
+~~~shell
+127.0.0.1:6379> ping
+pong    # 测试redis-cli是否连上服务器，出现该结果表示连上
+
+127.0.0.1:6379[1]> select 1  # 选择第2个数据库
+OK
+
+127.0.0.1:6379> set a a  # 存入键值对 "a" : "a"
+OK
+127.0.0.1:6379> get a   # 按键 "a" 取值
+"a"
+127.0.0.1:6379> shutdown  # 关闭redis服务器，连接改服务器的所有 redis-cli将会断开连接
+~~~
+
