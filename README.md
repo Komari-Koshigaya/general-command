@@ -957,6 +957,10 @@ show databases  // 显示所有的数据库
 db  // 查看当前所处的数据库
 show collections  // 显示数据库中所有的集合
 use test; // 使用test数据库库，该数据库可以不存在
+
+//MongoDB支持声明变量和运算符如 
+var a=9  
+a+1  //将打印出10
 ~~~
 
 ## CRUD
@@ -966,10 +970,23 @@ use test; // 使用test数据库库，该数据库可以不存在
 ~~~shell
 // 插入操作
 db.stu.insert({name:"张三",age:18,gender:"男"})  // 向名字为stu的集合插入新的文档{name:"张三",age:18,gender:"男"}；该集合事先可以不存在
+db.stu.insert({name:"张三",hobby:{sport:"basketball",movies:["大话西游","喜剧之王"]}})  //属性值也是文档的我们把他叫做内嵌文档，多个属性值用 []
 db.stu.insert([
 		{fav:89,age:'DD',gender:"男"},
 		{family:"摇摇乐",num:4,gender:"男"},
 ])  // 向名字为stu的集合插入多个文档
+
+//循环插入10000条数据  9.5s 性能慢
+for(var i=1;i<=10000;i++){
+	db.numbers.insert({num:i});
+}
+
+//等同于上面的效果 但因为只执行一次插入语句 0.4s 性能高  推荐使用
+var arr = [];
+for (var i = 1; i <= 10000; i++) {
+    arr.push({num:i});
+}
+db.numbers.insert(arr);
 ~~~
 
 ### 查询操作
@@ -979,6 +996,20 @@ db.stu.insert([
 db.stu.find()  // 查询集合stu的所有文档
 db.stu.find({family:"摇摇乐",num:5})  //多条件查询db.stu.find({family:"摇摇乐",num:4})[2]  //多条件查询,取第3个文档
 db.stu.find({family:"摇摇乐",num:4}).count()  //多条件查询，统计有多少条数据
+
+db.stu.find()[0].age  //查询stu集合中第一条记录的age属性值 = db.stu.findOne().age
+
+//如果要通过内嵌文档来对文档进行查询，可通过.的形式匹配，此时属性名必须使用引号
+db.stu.find({'hobby.movies':"大话西游"})  //查询爱好中喜欢的电影包括大话西游的
+db.stu.find({num:{$gt:5, $lte:7}})  //查询stu中num大于5小于等于7的文档
+
+// skip( (页码-1)*每页显示的条数 ).limit(每页显示的条数)；  达到分页显示的效果
+db.stu.find({num:{$gte:1}}).skip(5).limit(5)  //查询stu集合中num大于等于1的第6条-10条数据
+
+// order里存放的是stu的订单，里面有个来自stu的stu_id
+//下面演示一对多情况下，如何查询 张三的所有订单
+var stu_id= db.stu.findOne({name:"张三"}).age
+db.order.find({stuid:stu_id})
 ~~~
 
 ### 更新操作
@@ -1014,7 +1045,16 @@ db.stu.remove({family:"李四"})  //默认删除符合条件的所有文档 = db
 db.stu.remove({age:8},true)  //第二个参数传入true则删除符合条件的一个文档 =  db.stu.deleteOne({age:8})
 db.stu.remove({})   //若只传入一个空对象，则删除所有文档(性能略差)
 
-db.stu.drop()  //删除集合,若数据库只有这一个集合，则会同时删除数据库
+db.stu.drop()  //删除集合,若数据库只有这一个集合，则会同时删除数据库 性能高
 db.dropDatabase() //删除当前数据库
 ~~~
 
+## 文档之间的关系
+
+>一对一  ：通过内嵌文档的形式体现
+>
+>一对多/多对一：也可通过内嵌文档属性为数组的形式来体现 or 通过再属性中插入另一个文档 的_id 即不用foreign key的外键
+>
+>多对多：将一对多的外键写成数组
+>
+>
