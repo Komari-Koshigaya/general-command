@@ -792,6 +792,7 @@ npm 安装 Node.js 模块语法格式如下：
 
 ```bash
 $ npm install -g <Module Name>  # -g 代表安装到全局，即node.js根目录下/lib/nodemodules,  不加代表安装到当前目录
+$ npm install  -g  ganache-cli@6.9.1  # 全局安装指定版本的模块
 ```
 
 以下实例，我们使用 npm 命令安装常用的 Node.js web框架模块 **express**:
@@ -831,6 +832,10 @@ $ npm list grunt
 
 projectName@projectVersion /path/to/project/folder
 └── grunt@0.4.1
+
+$ npm list ganache-cli -g   //查看全局指定模块的安装信息
+/home/niejun/nodejs/lib
+└── ganache-cli@6.9.1
 ```
 
 ------
