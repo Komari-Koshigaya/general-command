@@ -712,9 +712,8 @@ sudo docker run -itd --name redis -p 6379:6379 redis
 sudo docker run -p 6379:6379 -v /home/niejun/var/db/redis:/data -v /home/niejun/var/db/redis/redis.conf:/etc/redis/redis.conf --name redis -d redis redis-server /etc/redis/redis.conf
 
 
-
-sudo docker exec -it redis redis-cli # 通过 redis-cli 连接测试使用 redis 服务
-
+sudo docker exec -it redis redis-cli # 通过 redis-cli 连接测试使用 redis 服务 加上--raw可显示中文但不会显示序号和双引号
+sudo docker start redis  # 启动处于退出状态的容器 redis
 ~~~
 
 # node.js
@@ -1173,6 +1172,8 @@ db.dropDatabase() //删除当前数据库
 # Redis的用法
 
 ~~~shell
+# 默认16个数据库，从0开始，默认使用0  命令不区分大小写
+# 5大数据类型 string set list hash zset
 127.0.0.1:6379> ping
 pong    # 测试redis-cli是否连上服务器，出现该结果表示连上
 
@@ -1184,5 +1185,117 @@ OK
 127.0.0.1:6379> get a   # 按键 "a" 取值
 "a"
 127.0.0.1:6379> shutdown  # 关闭redis服务器，连接改服务器的所有 redis-cli将会断开连接
+~~~
+
+## 单线程 + IO多路复用
+
+### select模式
+
+监视，需要一个一个询问，最多同时监视1024
+
+### poll模式
+
+监视没有数量限制，也需要一个一个询问
+
+### epoll模式
+
+监视没有数量限制，每个请求都有标识不用一个一个询问
+
+## 操作方法
+
+### key
+
+~~~bash
+keys *  # 查询当前有哪些键
+exists keyname # 查询某个键是否存在  1代表存在 0代表不存在
+type keyname # 查询keyname对应的值是什么类型
+expire a 10 # 设置键a的过期时间为10s，该键必须事先存在
+ttl a # 查看键a还有多少秒过期  -1表示永不过期 -2表示已过期
+dbsize  # 查询key的数量
+flushdb  # 清空当前库
+flushall # 通杀全部16个库
+~~~
+
+### String
+
+~~~bash
+get a # 查询对应键的值
+set a 123 # 添加键值对，若该键a已存在则会覆盖原先的值 默认时String类型
+append a 123 # 第一次添加时值为string，后面追加值时会自动转换，返回的是追加后的长度
+strlen a  # 获得值的长度
+setnx a "cdd" # 只有在key不存在时才设置key的值
+incr a # a的数字值+1
+decr a # -1
+incrby/decrby a 步长 # 自定义加减的数字
+
+mset a 1 b 2 c 3  #同时多个键值对
+mget a b c # 同时获得多个value
+msetnx a 1 b 2 c 3 # 同时设置多个键值对，当且仅当所有键都不存在
+getrange key 起始位置 结束位置 #取子串 左闭右闭
+setrange key 起始位置 value # 从起始位置开始替换子串 包括起始位置
+setex a 10 124 # 设置键值的同时设置过期时间， 值为“124” 10s后过期
+getset a 456 # 获得a的旧值，设置新值为“456”
+
+~~~
+
+### List  单键多值可重复有序
+
+~~~bash
+# 底层是双向链表 按照插入顺序排序
+lpush/rpush key value1 value2 value3 # 从左边/右边插入一个或多个值
+lpop/rpop key # 从左边/右边吐出一个值 吐出后该值从list删除
+rpoplpush key1 key2 # 从key1右边吐出一个值，查到key2的右边
+lrange key start stop #按照索引下标获得元素 从左到右 -1表示表尾
+lindex key index # 获取索引下标对应的值
+llen key # 获取列表长度
+linsert key before/after value newvalue # 在value的前面/后面插入值
+lrem key n value # 删除n个value n>0代表从左往右删 <0代表从右往左删 =0表示删除所有
+~~~
+
+### set 无序集合自动排重
+
+~~~bash
+# 底层是value为null的hash表，提供判断某个成员是否在set集合内的接口 list没有此方法
+sadd key value1 value2 # 集合内加入一个或多个值，值已存在的会被忽略
+smembers key # 取出所有值
+scard key # 返回元素个数
+sismember a value # 判断是否在该set集合 1代表存在 0代表不存在
+srem a value1 value2 # 删除集合中的一个或多个元素
+spop a # 随机从集合中吐出一个值 会从集合中删除
+srandmember a n # 随机从该集合中取出n个值  不会从该集合中删除
+sinter key1 key2 # 返回两个集合的交集元素
+sunion key1 key2 # 返回两个集合的并集元素
+sdiff key1 key2  # 返回两个集合的差集元素  key1中key2没有的元素
+~~~
+
+### hash 键值对集合
+
+~~~bash
+# 适合存储对象 类似java里的map<string，string>
+hset key field value # 给key集合中的field键赋值value
+hmset key field value field2 value2 # 给key集合中的批量设置键值对
+#如： hmset stu stu:1010:stuid 1010 stu:1010:name niejun
+hexists key field # 查看哈希表key中给定域field是否存在
+hkeys key # 列出该hash集合中的所有field
+hvals key # 列出所有值
+hgetall key # 列出所有field和对应的value
+hincrby key field 步长 # 数值型执行增加操作 步长<0则表示减少 没有decr
+hsetnx key field value # 当哈希表key中的field对应的值不存在则设为value
+~~~
+
+### zset 有序集合的set
+
+~~~bash
+# 没有重复元素 每个成员都关联了一个score 按照这个评分升序排序 评分可以重复
+zadd key score1 value1 score2 value2 # 将一个或多个member元素及其score值
+zrange key 起始位置 结束位置 [wotjscores] # 返回start-stop下标的元素 可选项表示返回score 按score从小到大排序
+zrevrange key 起始位置 结束位置 [wotjscores] # 返回start-stop下标的元素 可选项表示返回score 按score从大到小排序
+
+zrangebyscore key min max [withscores] # 根据分数范围查询 结果集按从小到大排序
+zrevrangebyscore key max min [withscores] # 根据分数范围查询 结果集按从小到大排序
+zincrby key 步长 value # 给value对应的score加上增量
+zrem key value # 删除指定值的元素
+zcount key min max # 统计分数区间内的元素个数 [min,max]
+zrank key value # 返回该值在集合中的排名 即索引下标 从0开始
 ~~~
 
