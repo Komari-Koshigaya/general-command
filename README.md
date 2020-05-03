@@ -634,29 +634,17 @@ service docker start
 service docker stop
 
 sudo docker images
-sudo docker pull mysql:5.8
 sudo docker built -t miniserver:0.0.1 .
 sudo doccker image rm miniserver:0.0.1
 
+
 sudo docker run --rm -d -p 8080:8888 --name main --link mysql-docker:mysql-docker miniserver:0.0.1
+
 sudo docker run -d -p 8080:8888 --name main miniserver:0.0.1 
 sudo docker ps -a
 sudo docker logs -f main
 sudo docker stop main
 sudo docker start main
-
-# mysql 容器
-sudo docker volume create mysql_data  #创建数据卷用来保存mysql的数据，可多个容器共享一个数据卷，当容器被删除时，数据卷不会被删除，mysql的数据依然存在
-sudo docker run --name mysql-docker -v mysql_data:/home/niejun/var/db/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:5.7   # 执行此命令时必须先执行上一条命令
-
-
-# 一般来说下面的命令用不上
-sudo docker exec -it mysql-docker /bin/bash   #进入MySQL容器 /bin/bash
-mysql -u root -p  # 进入容器里的mysql
-
-# 设置外部网络访问mysql权限  外部访问权限不够才执行
-ALTER user 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';  --sql语句
-FLUSH PRIVILEGES;    --sql语句
 
 #删除镜像和容器
 sudo docker stop contain-id  # 根据容器id停止容器，删除前先停止运行
@@ -675,6 +663,25 @@ sudo docker inspect web # 查看数据卷的具体信息,web是数据卷挂在�
 sudo docker volume my-vol # 删除数据卷
 sudo docker volume prune # 清理无主的数据卷
 ```
+
+## 安装运行Mysql
+
+~~~bash
+sudo docker pull mysql:5.6 # 注此处如使用最新版本8.x 对应的mysql依赖必须改成8.x 如8.0.11 否则会报错  Unable to load authentication plugin 'caching_sha2_password'.
+sudo docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:5.6  # 不指定root密码会启动失败
+
+# mysql 容器
+sudo docker volume create mysql_data  #创建数据卷用来保存mysql的数据，可多个容器共享一个数据卷，当容器被删除时，数据卷不会被删除，mysql的数据依然存在
+sudo docker run --name mysql-docker -v mysql_data:/home/niejun/var/db/mysql -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:5.7   # 执行此命令时必须先执行上一条命令
+
+# 进入docker里的mysql容器
+sudo docker exec -it mysql /bin/bash   #进入MySQL容器 /bin/bash
+mysql -u root -p  # 进入容器里的mysql
+
+# 设置外部网络访问mysql权限  外部访问权限不够才执行
+ALTER user 'root'@'%' IDENTIFIED WITH mysql_native_password BY '123456';  --sql语句
+FLUSH PRIVILEGES;    --sql语句
+~~~
 
 ## 安装运行MongoDB
 
@@ -1298,4 +1305,30 @@ zrem key value # 删除指定值的元素
 zcount key min max # 统计分数区间内的元素个数 [min,max]
 zrank key value # 返回该值在集合中的排名 即索引下标 从0开始
 ~~~
+
+## 配置 redis.conf
+
+### 设置密码
+
+~~~bash
+# 临时密码 
+$ 127.0.0.1:6379> config get require pass # 查看当前是否需要密码
+127.0.0.1:6379> config set requirepass "123456" #设置需要输入密码 123456 设置之后 后面的指令需要先输入一次密码
+127.0.0.1:6379> auth 123456 # 通过密码认证
+$ 127.0.0.1:6379> config get require pass
+$ 127.0.0.1:6379> config set requirepass "" # 设置不需要密码
+
+# 永久密码 需要修改redis的配置文件 redis.conf
+# 启用 "requirepass foobared" foobared就是密码
+~~~
+
+## 事务 Multi、Exec、discard
+
+>- 从输入Multi命令开始，输入的命令都会依次进入命令队列中，但不会执行
+>
+>输入Exec后，redis会把之前的命令队列中的命令依次执行、
+>
+>- 组队过程中可以通过discard来放弃组队
+>
+>  ![redis事务](doc/redis_trans.png)
 
