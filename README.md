@@ -303,7 +303,6 @@ crontab -l    # 显示任务
 ~~~shell
 ## 如果要查找某软件包是否安装，用 rpm -qa | grep “软件或者包的名字”
 rpm -qa | grep docker # 安装docker之前查看是否安装
-
 yum install ntp  #安装 ntp
 
 # rpm -e 文件名 卸载packpage-name软件，若该软件有服务在后台运行需先停止，若此命令提示依赖包错误，可以使用 rpm -e packpage-name --nodeps
@@ -714,10 +713,12 @@ sudo docker pull redis  # 拉取官方最新版本的镜像
 sudo docker images  # 查看是否已安装redis
 
 # 运行容器 
-# -p 6379:6379 ：映射容器服务的 6379 端口到宿主机的 6379 端口。外部可以直接通过 宿主机 ip:6379 访问到 mongo 的服务。
 sudo docker run -itd --name redis -p 6379:6379 redis
+#   -v /root/redis/redis.conf:/root/redis/redis.conf：把宿主机配置好的redis.conf放到容器内的这个位置中
+#  	-v /root/redis/data:/data：把redis持久化的数据在宿主机内显示，做数据备份
+# 	redis-server /etc/redis/redis.conf：这个是关键配置，让redis不是无配置启动，而是按照这个redis.conf的配置启动
+#   –appendonly yes：redis启动后数据持久化
 sudo docker run -p 6379:6379 -v /home/niejun/var/db/redis:/data -v /home/niejun/var/db/redis/redis.conf:/etc/redis/redis.conf --name redis -d redis redis-server /etc/redis/redis.conf
-
 
 sudo docker exec -it redis redis-cli # 通过 redis-cli 连接测试使用 redis 服务 加上--raw可显示中文但不会显示序号和双引号
 sudo docker start redis  # 启动处于退出状态的容器 redis
@@ -1322,7 +1323,9 @@ $ 127.0.0.1:6379> config set requirepass "" # 设置不需要密码
 # 启用 "requirepass foobared" foobared就是密码
 ~~~
 
-## 事务 Multi、Exec、discard
+## Redis事务 
+
+### Multi、Exec、discard
 
 >- 从输入Multi命令开始，输入的命令都会依次进入命令队列中，但不会执行
 >
@@ -1331,4 +1334,84 @@ $ 127.0.0.1:6379> config set requirepass "" # 设置不需要密码
 >- 组队过程中可以通过discard来放弃组队
 >
 >  ![redis事务](doc/redis_trans.png)
+
+### 事务的错误处理
+
+>报告错误：当multi时，即输入命令时出现错误，整个队列取消   类似编译错误
+>
+>如果执行阶段某个命令报错，则只有报错的命令不会执行，而其他的命令都会执行，不会回滚。
+
+~~~bash
+127.0.0.1:6379> multi   # 开启事务
+OK
+127.0.0.1:6379> set a abc
+QUEUED
+127.0.0.1:6379> get a
+QUEUED
+127.0.0.1:6379> exec   # 执行事务
+1) OK
+2) "abc"
+127.0.0.1:6379>
+
+# discard 取消整个事务
+127.0.0.1:6379> multi
+OK
+127.0.0.1:6379> get a
+QUEUED
+127.0.0.1:6379> discard
+OK
+127.0.0.1:6379> exec
+(error) ERR EXEC without MULTI
+127.0.0.1:6379>
+
+# 第一种报告错误  整个事务都不会执行
+127.0.0.1:6379> multi
+OK
+127.0.0.1:6379> set a b
+QUEUED
+127.0.0.1:6379> gets a  # 不存在 gets命令 报告错误
+(error) ERR unknown command `gets`, with args beginning with: `a`,
+127.0.0.1:6379> exec
+(error) EXECABORT Transaction discarded because of previous errors.
+127.0.0.1:6379>
+
+# 第二种错误  只有出错的指令不会执行
+127.0.0.1:6379> multi
+OK
+127.0.0.1:6379> set a 3d
+QUEUED
+127.0.0.1:6379> incr a  # a不是数值类型，执行时会报错
+QUEUED
+127.0.0.1:6379> get a
+QUEUED
+127.0.0.1:6379> exec
+1) OK
+2) (error) ERR value is not an integer or out of range
+3) "3d"
+127.0.0.1:6379>
+~~~
+
+### watch key1 key2
+
+~~~bash
+# 在执行multi之前，先执行 watch key1 key2 可以监视一个或多个key，如果在事务执行之前这些key被其他命令所改动，那么事务会被打断
+unwatch # 取消watch命令对所有key的监视，如果在执行watch命令之后，exec或discard先被执行了的话，就不需要再执行unwatch
+~~~
+
+# ab工具模拟高并发
+
+> centos6自带该工具，cetos7需要通过 yum install httpd-tools 安装
+
+~~~bash
+rpm -qa | grep http-tools  # 查看是否安装该工具
+yum install httpd-tools # 安装该工具
+rpm -e http-tools # 先查询该工具的安装信息，再根据获得的包名卸载
+
+ab -v # 查看ab版本 也可用来查看是否安装该工具
+# 使用ab进行高并发测试
+# -c 并发数 一次发送多少请求
+# -n 请求数 请求多少次
+# -p 指定请求数据文件
+ab -c 500 -n 5000 http://localhost/
+~~~
 
