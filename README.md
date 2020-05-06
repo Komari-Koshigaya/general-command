@@ -624,7 +624,7 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
  **sudo yum update**  # 更新内核版本,即可启动docker服务， 亲测 3.10.0-327启动不了，升级后3.10.0-1062可以启动
 
 ```shell
-安装docker
+# 安装docker
 yum -y install docker-io //权限不够则需加上 sudo
 docker version //查看是否安装成功，出现版本号则成功
 vi /etc/docker/daemon.json //设置docker镜像，若已开启服务修改后重启服务方生效
@@ -662,6 +662,10 @@ sudo docker inspect web # 查看数据卷的具体信息,web是数据卷挂在�
 sudo docker volume my-vol # 删除数据卷
 sudo docker volume prune # 清理无主的数据卷
 ```
+
+> 镜像存放路径：/var/lib/docker/image/overlay2/layerdb
+>
+> 容器存放路径： /var/lib/docker/containers/
 
 ## 安装运行Mysql
 
@@ -1415,3 +1419,60 @@ ab -v # 查看ab版本 也可用来查看是否安装该工具
 ab -c 500 -n 5000 http://localhost/
 ~~~
 
+## 持久化
+
+###  RDB(redis database)
+
+**存储数据。**按一定周期存储redis数据，若redis意外down掉，会丢失最后一次的数据。效率较AOF高。配置在 redis.conf
+
+~~~bash
+dir ./  # 保存路径为当前工作目录
+dbfilename dump.rdb # 持久化文件名 dump.rdb
+
+# 保存策略
+save 900 1
+save 300 10
+save 60 10000
+~~~
+
+### AOF
+
+**存储指令。**以日志的形式记录每个写操作，不记录读操作。只许追加文件不可以改写文件。redis重启时根据日志文件将写指令从头到尾执行一次以完成数据的恢复工作。
+
+AOF默认不开启，需要手动在配置文件中配置  `appendonly yes`。保存路径同RDB的路径。
+
+保存的文件较RDB更大。
+
+> 若AOF和RDB同时开启，redis会遵从AOF的配置。
+>
+> 如果只是用作缓存，两种都可不用。
+
+## 主从复制
+
+> 主从复制：读写分离。主机数据更新后根据配置和策略，自动同步到备机的master/slave机制，**master以写为主，slave以读为主**。 从服务器断线后需要通过slaveof 指令成为从服务器。主服务器断线后，从服务器待机。
+
+配从(服务器)不配主(服务器)
+
+- 拷贝多个redis.conf文件include
+- 指定端口port
+- log文件名字
+- dump.rdb 名字dbfilename
+- appendonly关掉或者换名字
+
+~~~bash
+127.0.0.1:6379> info replication  # 打印主从复制的相关信息
+127.0.0.1:6379> slaveof ip port  # 成为某个实例的从服务器
+127.0.0.1:6379> slaveof none  # 去掉从服务器的身份 从机变主机
+~~~
+
+### 薪火相传
+
+从机本身连着另一个从机，当主机宕掉时，从机通过slaveof none升级为主机。减少中心化风险。
+
+### 哨兵模式
+
+能够后台监控主机是否故障，如果故障了根据投票数自动将从库转换为主库。
+
+## redis集群
+
+> 主从复制解决读写压力，集群解决内存压力
