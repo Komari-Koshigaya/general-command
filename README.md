@@ -68,6 +68,92 @@ PS：若宿主机连的是**wifi**，虚拟机要想访问外网，xshell连上�
 >
 > ![查看端口占用情况](doc/view_port_in_windos.png)
 
+# virtualbox相关操作
+
+## VirtualBox导入VmWare生成的.vmdk格式虚拟机镜像
+
+> 原文链接： [VirtualBox导入.vmdk虚拟机](https://blog.csdn.net/ArthurCaoMH/article/details/90274651)
+
+VmWare默认的镜像格式是.vmdk格式的，VirtualBox则默认是.vdi格式的。其实这在VirtualBox新建虚拟机的过程中是可选的。
+
+导入.vmdk格式的镜像到VirtualBox只需要新建一个虚拟机，并且不创建虚拟硬盘。如下图：
+![img](doc/virtualbox/import_vmdk_to_virtualbox_1.jpg)
+
+无视警告，继续：
+![img](doc/virtualbox/import_vmdk_to_virtualbox_2.jpg)
+
+创建好之后，在设置里面把.vmdk格式的虚拟硬盘添加进去：
+![img](doc/virtualbox/import_vmdk_to_virtualbox_3.jpg)
+
+![img](doc/virtualbox/import_vmdk_to_virtualbox_4.png)
+
+![img](doc/virtualbox/import_vmdk_to_virtualbox_5.jpg)
+
+![img](doc/virtualbox/import_vmdk_to_virtualbox_6.png)
+
+这样就可以了。
+
+如果遇到windows虚拟机起不开的情况，尝试更改下下面这个选项：
+启用下I/O APIC试试。
+
+![img](doc/virtualbox/unabled_windows_vm.jpg)
+
+### 删除载入的.vmdk虚拟机
+
+由于.vmdk格式只包含原始系统镜像，运行时产生的文件是分开放的并非叠加到.vmdk，故只需移除运行时的文件，下回导入可同样使用该.vmdk  ，具体过程如图：
+
+![删除虚拟机](doc/virtualbox/virtualbox_vmdk_delete1.png)
+
+![删除虚拟机](doc/virtualbox/virtualbox_vmdk_delete2.png)
+
+![删除虚拟机](doc/virtualbox/virtualbox_vmdk_delete3.png)
+
+## virtualbox增强功能
+
+> 原文链接： [VirtualBox共享解决和拖放不生效的问题](https://blog.csdn.net/ArthurCaoMH/article/details/90274651)
+
+### 简介
+
+- 主机系统：windows 10 x64位
+- 虚拟机系统：windows 7 x32位
+
+### 步骤
+
+#### 一、设置
+
+*注：按照下图所示进行设置*
+
+![在这里插入图片描述](doc/virtualbox/virtualbox_addition_11.png)
+![在这里插入图片描述](doc/virtualbox/virtualbox_addition_12.png)
+![在这里插入图片描述](doc/virtualbox/virtualbox_addition_13.png)
+
+#### 二、安装增强功能
+
+注： 增强功能的安装是安装在虚拟机里面的*
+
+1. 启动虚拟机
+2. 点击上方菜单栏`设备`→`安装增强功能`
+
+- 这时并没有什么事情发生，但是在虚拟机的虚拟光驱上已经挂载了增强功能盘
+  ![安装增强工具](doc/virtualbox/virtualbox_addition_21.png)
+
+- 双击打开`CD 驱动器`，双击下图的程序进行安装
+  ![安装增强工具](doc/virtualbox/virtualbox_addition_22.png)
+
+- 安装之后需要重启，重启之后就可以使用下列功能了
+
+  - 粘贴复制
+
+  - 拖放复制 
+
+    > 若拖放复制只能从虚拟机拖放到宿主机，无法通过宿主机拖放到虚拟机，可以通过 ==共享文件夹== 曲线救国
+    >
+    > ![共享文件夹](doc/virtualbox/virtualbox_share_directory.png)
+
+  - 视图→虚拟显示屏1→ 重设为1600x900
+
+  - ……
+
 # Linux命令
 
 ## linux时间及时区设置
@@ -726,6 +812,20 @@ sudo docker run -p 6379:6379 -v /home/niejun/var/db/redis:/data -v /home/niejun/
 
 sudo docker exec -it redis redis-cli # 通过 redis-cli 连接测试使用 redis 服务 加上--raw可显示中文但不会显示序号和双引号
 sudo docker start redis  # 启动处于退出状态的容器 redis
+~~~
+
+## 安装运行 Sql Server
+
+~~~bash
+docker pull microsoft/mssql-server-linux  # 拉取镜像
+sudo docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Nie@*123" -p 1433:1433 --name sqlserver -d microsoft/mssql-server-linux
+  # 运行容器 这个密码需要复杂密码，要有大小写和特殊符号共8位
+
+
+sudo docker exec -it sqlserver /bin/bash  # 登录容器
+/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Nie@*123"   # 连接到sqlcmd
+
+# 使用 navicat之类的登录时 用户名：sa  密码: Nie@*123
 ~~~
 
 # node.js
