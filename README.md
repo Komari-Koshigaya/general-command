@@ -434,6 +434,8 @@ rpm -e MySQL-server-5.6.25-1.e16.x86_64  # 卸载mysql服务端
 
 ## 安装Zsh
 
+> 原文链接：[linux shell——zsh的安装与使用](https://www.cnblogs.com/lfri/p/10798105.html)
+
 Zsh虽然好用，但直接用起来比较麻烦，但是已经有大神配置好的框架：[oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)，专门为Zsh打造的。
 
 ### 安装方法
@@ -489,7 +491,15 @@ rpm -e zsh # 卸载zsh
 #### 目录穿越
 
 ```shell
-d  # d命令会列出最近进入的目录历史，并且会给这些目录加上序号，只要输入对应目录的序号，就能进入该目录 如 d 1
+d  # d命令会列出最近进入的目录历史，并且会给这些目录加上序号，只要输入对应目录的序号，就能进入该目录 如 1
+niejun@localhost  ~/gitpro/testgit> d
+0       ~/gitpro/testgit
+1       ~
+2       1
+niejun@localhost  ~/gitpro/testgit> 1
+~  # 可以看到已经切换到1对应的目录也就是 ~目录下
+niejun@localhost  ~ >  
+
 
 # 以下时部分目录跳转的快捷方式，可通过alias查看所有
 -='cd -'
