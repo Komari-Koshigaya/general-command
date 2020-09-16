@@ -965,9 +965,9 @@ sudo docker inspect zookeeper:3.4.9 # 查看zookeeper镜像详情
 # --restart always 当docker重启时 容器自动启动
 # --name some-zookeeper 给容器起个别名
 sudo docker run -d -p 2181:2181 --name some-zookeeper --restart always zookeeper:3.4.9
-docker ps # 查看所有容器的运行状态
+sudo docker ps # 查看所有容器的运行状态
 
-docker exec -it some-zookeeper bash  # 进入zookeeper容器
+sudo docker exec -it some-zookeeper bash  # 进入zookeeper容器
 ~~~
 
 #### zookeeper指令
@@ -985,7 +985,7 @@ exit # 退出zookeeper容器
 
 演示效果
 
-![zookeeper容器演示效果](assets/image-20200916200406774.png)
+![zookeeper容器演示效果](assets/docker_zookeeper.png)
 
 # node.js
 
