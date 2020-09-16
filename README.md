@@ -6,13 +6,13 @@
 
 > 右键选择 ***VirtualBox6.1.4*** 里的Linux，我这里是以centos7为例子。 右键->设置->网络 连接方式选择 ：网络地址转换（NAT） 然后点高级->端口转发， 如图配置即可： 
 >
-> ![config_in_vb](doc/config_in_vb.png)
+> ![config_in_vb](assets/config_in_vb.png)
 >
 > 端口转发设置非常重要，shell连接本地ip上的9023端口，即可转发到虚拟机里的22端口。 主机端口和子系统端口可自己定义，根据实际需求设置。
 >
 > ***MobaXterm V20.1***  下ssh连接设置如下
 >
-> ![config_in_mobaxterm](doc/config_in_mobaxterm.png)
+> ![config_in_mobaxterm](assets/config_in_mobaxterm.png)
 >
 > 这样配置后，会通过ssh连接上本地虚拟机，并进入 配置的特定用户目录下
 
@@ -42,13 +42,13 @@ PS：若宿主机连的是**wifi**，虚拟机要想访问外网，xshell连上�
 >
 > 2. 查看虚拟机启用的网卡和ip地址(Centos使用的是 **ip addr** 而不是 ifconfig)
 >
-> ![ip_addr](doc/ip_addr.png)
+> ![ip_addr](assets/ip_addr.png)
 >
 > 可以看到此处启用的网卡名是  enp0s3
 >
 > 3. 修改上面对应网卡的配置文件，这里是 /etc/sysconfig/network-scripts/ifcfg-enp0s3，禁用 dhcp设置静态ip地址
 >
-> ![设置网卡](doc/ip_set_static.png)
+> ![设置网卡](assets/ip_set_static.png)
 >
 > ​		把BOOTRPOTO修改成了static，是因为dhcp是自动获取，如果不改成static，我们在这里修改的这些地址不会生效，因为重启网络服务时，BOOTRPOTO的值决定了是自动分配还是使用静态数据，DNS1和DNS2对应的是宿主机的首选DNS服务器和备用DNS服务器
 >
@@ -66,7 +66,7 @@ PS：若宿主机连的是**wifi**，虚拟机要想访问外网，xshell连上�
 >
 > netstat -ano | findstr 7428  # 查看进程id为7428的进程信息，可以看到进程名
 >
-> ![查看端口占用情况](doc/view_port_in_windos.png)
+> ![查看端口占用情况](assets/view_port_in_windos.png)
 
 # virtualbox相关操作
 
@@ -77,36 +77,36 @@ PS：若宿主机连的是**wifi**，虚拟机要想访问外网，xshell连上�
 VmWare默认的镜像格式是.vmdk格式的，VirtualBox则默认是.vdi格式的。其实这在VirtualBox新建虚拟机的过程中是可选的。
 
 导入.vmdk格式的镜像到VirtualBox只需要新建一个虚拟机，并且不创建虚拟硬盘。如下图：
-![img](doc/virtualbox/import_vmdk_to_virtualbox_1.jpg)
+![img](assets/virtualbox/import_vmdk_to_virtualbox_1.jpg)
 
 无视警告，继续：
-![img](doc/virtualbox/import_vmdk_to_virtualbox_2.jpg)
+![img](assets/virtualbox/import_vmdk_to_virtualbox_2.jpg)
 
 创建好之后，在设置里面把.vmdk格式的虚拟硬盘添加进去：
-![img](doc/virtualbox/import_vmdk_to_virtualbox_3.jpg)
+![img](assets/virtualbox/import_vmdk_to_virtualbox_3.jpg)
 
-![img](doc/virtualbox/import_vmdk_to_virtualbox_4.png)
+![img](assets/virtualbox/import_vmdk_to_virtualbox_4.png)
 
-![img](doc/virtualbox/import_vmdk_to_virtualbox_5.jpg)
+![img](assets/virtualbox/import_vmdk_to_virtualbox_5.jpg)
 
-![img](doc/virtualbox/import_vmdk_to_virtualbox_6.png)
+![img](assets/virtualbox/import_vmdk_to_virtualbox_6.png)
 
 这样就可以了。
 
 如果遇到windows虚拟机起不开的情况，尝试更改下下面这个选项：
 启用下I/O APIC试试。
 
-![img](doc/virtualbox/unabled_windows_vm.jpg)
+![img](assets/virtualbox/unabled_windows_vm.jpg)
 
 ### 删除载入的.vmdk虚拟机
 
 由于.vmdk格式只包含原始系统镜像，运行时产生的文件是分开放的并非叠加到.vmdk，故只需移除运行时的文件，下回导入可同样使用该.vmdk  ，具体过程如图：
 
-![删除虚拟机](doc/virtualbox/virtualbox_vmdk_delete1.png)
+![删除虚拟机](assets/virtualbox/virtualbox_vmdk_delete1.png)
 
-![删除虚拟机](doc/virtualbox/virtualbox_vmdk_delete2.png)
+![删除虚拟机](assets/virtualbox/virtualbox_vmdk_delete2.png)
 
-![删除虚拟机](doc/virtualbox/virtualbox_vmdk_delete3.png)
+![删除虚拟机](assets/virtualbox/virtualbox_vmdk_delete3.png)
 
 ## virtualbox增强功能
 
@@ -123,9 +123,9 @@ VmWare默认的镜像格式是.vmdk格式的，VirtualBox则默认是.vdi格式�
 
 *注：按照下图所示进行设置*
 
-![在这里插入图片描述](doc/virtualbox/virtualbox_addition_11.png)
-![在这里插入图片描述](doc/virtualbox/virtualbox_addition_12.png)
-![在这里插入图片描述](doc/virtualbox/virtualbox_addition_13.png)
+![在这里插入图片描述](assets/virtualbox/virtualbox_addition_11.png)
+![在这里插入图片描述](assets/virtualbox/virtualbox_addition_12.png)
+![在这里插入图片描述](assets/virtualbox/virtualbox_addition_13.png)
 
 #### 二、安装增强功能
 
@@ -135,10 +135,10 @@ VmWare默认的镜像格式是.vmdk格式的，VirtualBox则默认是.vdi格式�
 2. 点击上方菜单栏`设备`→`安装增强功能`
 
 - 这时并没有什么事情发生，但是在虚拟机的虚拟光驱上已经挂载了增强功能盘
-  ![安装增强工具](doc/virtualbox/virtualbox_addition_21.png)
+  ![安装增强工具](assets/virtualbox/virtualbox_addition_21.png)
 
 - 双击打开`CD 驱动器`，双击下图的程序进行安装
-  ![安装增强工具](doc/virtualbox/virtualbox_addition_22.png)
+  ![安装增强工具](assets/virtualbox/virtualbox_addition_22.png)
 
 - 安装之后需要重启，重启之后就可以使用下列功能了
 
@@ -148,7 +148,7 @@ VmWare默认的镜像格式是.vmdk格式的，VirtualBox则默认是.vdi格式�
 
     > 若拖放复制只能从虚拟机拖放到宿主机，无法通过宿主机拖放到虚拟机，可以通过 ==共享文件夹== 曲线救国
     >
-    > ![共享文件夹](doc/virtualbox/virtualbox_share_directory.png)
+    > ![共享文件夹](assets/virtualbox/virtualbox_share_directory.png)
 
   - 视图→虚拟显示屏1→ 重设为1600x900
 
@@ -160,7 +160,7 @@ VmWare默认的镜像格式是.vmdk格式的，VirtualBox则默认是.vdi格式�
 
 > 在virtualbox里确认虚拟机的网络配置
 >
-> ![网络配置](doc/virtualbox/virtualbox_network_setting.png)
+> ![网络配置](assets/virtualbox/virtualbox_network_setting.png)
 >
 > 配置没问题，考虑是否是因为**缺少网卡驱动** (winXp64_52pojie_2.0是这个原因)
 >
@@ -191,7 +191,7 @@ sudo hwclock -w    # 将硬件时间置为当前系统时间
 
 > 注：virtualbox的虚拟机，默认每次开机会获得宿主机的本地时间，获得的时间会比宿主机***晚8个小时***，此时需要设置virtualbox，再***设置—系统里，取消勾中硬件时钟使用国际标准时间(UTC)***
 >
-> ![晚8个小时时配置VB](doc/vb_config_time_late.png)
+> ![晚8个小时时配置VB](assets/vb_config_time_late.png)
 >
 > 另：每次fn+f12(即电脑进入***休眠***时间)，虚拟机里的时间(包括系统时间和硬件时间)会***停止计时***，这也就导致，休眠之后再唤醒电脑虚拟机里的时间仍是上回休眠之前的。
 >
@@ -257,7 +257,7 @@ sudo hwclock -w    # 将硬件时间置为当前系统时间
 > >  根据颜色表，套用入字符颜色设置格式中，就可以对linux终端命令行颜色进行个性化设置了。比如要设置命令行的格式为黄字红底闪烁，显示当前用户的账号名称、主机的第一个名字、完整的当前工作目录名称、24小时格式时间，就可以使用如下的命令：
 > >  PS1="[\e[1;5;41;33m][\u@\h \W\t]\$[\e[0m]"
 > >
-> > ![PS1设置效果](doc/linux_PS1_1.png)
+> > ![PS1设置效果](assets/linux_PS1_1.png)
 >
 > #### 保存设置（修改配置文件）
 >
@@ -351,7 +351,7 @@ sudo find / -name "*haha*"  # 查看 用户 haha 有哪些相关文件, 可以�
 >
 > 若 执行命令时 出现下列情况
 >
-> ![linux_command_404](doc/linux_command_404.png)
+> ![linux_command_404](assets/linux_command_404.png)
 >
 > 代表缺少 .bashrc 和 .bash_profile 文件，可从 /root 或 /home/xxuser 下复制这两个文件到 /home/niejun 下
 
@@ -523,7 +523,14 @@ alias # 查看有哪些命令别名
 history # 查看之前的历史命令
 cd -  # 切换到上一次的目录
 top   # 查看系统内存、cpu等瞬时使用情况
+sudo service docker start  # 启动docker服务
+sudo service docker status # 查看docker服务的启动状态
+
 ~~~
+
+查看服务启动状态 效果如下
+
+![查看服务端穷的那个状态](assets/image-20200916191653323.png)
 
 # git操作命令
 
@@ -728,7 +735,7 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 >
 > 之后提交时用 **git cz** 代替 git commit 
 >
-> ![git-cz截图	](doc/git-cz_result.png)
+> ![git-cz截图	](assets/git-cz_result.png)
 
 ## 根据 commit自动生成 changelog.md
 
@@ -745,8 +752,8 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 > 
 > conventional-changelog -p angular -i CHANGELOG.md -w -r 0 # 生成所有发布的 Change log
 > ~~~
-> ![changelog.md截图](doc/conventional-changelog_result_1.png)
-> ![changelog.md截图](doc/conventional-changelog_result_1.png)
+> ![changelog.md截图](assets/conventional-changelog_result_1.png)
+> ![changelog.md截图](assets/conventional-changelog_result_1.png)
 >
 > ***简化上述代码***
 >
@@ -940,7 +947,7 @@ sudo docker exec -it sqlserver /bin/bash  # 登录容器
 >
 > 1. 进入[node.js官网](https://nodejs.org/en/download/), 下载 linux 版本的源码
 >
-> ![官网下载截图](doc/node.js_install_1.png)
+> ![官网下载截图](assets/node.js_install_1.png)
 >
 > 2. 通过ftp工具上传到 linux，解压安装包
 >
@@ -1543,7 +1550,7 @@ $ 127.0.0.1:6379> config set requirepass "" # 设置不需要密码
 >
 >- 组队过程中可以通过discard来放弃组队
 >
->  ![redis事务](doc/redis_trans.png)
+>  ![redis事务](assets/redis_trans.png)
 
 ### 事务的错误处理
 
