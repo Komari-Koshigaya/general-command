@@ -832,6 +832,7 @@ service docker start
 service docker stop
 
 sudo docker images
+sudo docker inspect image-id # 查看镜像详情
 sudo docker built -t miniserver:0.0.1 .
 sudo doccker image rm miniserver:0.0.1
 
@@ -940,6 +941,51 @@ sudo docker exec -it sqlserver /bin/bash  # 登录容器
 
 # 使用 navicat之类的登录时 用户名：sa  密码: Nie@*123
 ~~~
+
+## 安装运行zookeeper(单机&集群)
+
+> 原文链接：[Docker下安装zookeeper（单机 & 集群）](https://www.cnblogs.com/LUA123/p/11428113.html)
+
+~~~shell
+sudo docker search zookeeper # 查看有哪些zookeeper镜像
+sudo docker pull zookeeper:3.4.9
+sudo docker inspect zookeeper:3.4.9 # 查看zookeeper镜像详情
+~~~
+
+查看镜像详情 效果如下
+
+![image-20200916194028592](assets/image-20200916194028592.png)
+
+### 单机
+
+~~~shell
+# 运行容器 
+# d 容器运行与后台 默认是前台
+# -p 2181:2181 ：映射容器服务的 2181 端口到宿主机的 2181 端口。
+# --restart always 当docker重启时 容器自动启动
+# --name some-zookeeper 给容器起个别名
+sudo docker run -d -p 2181:2181 --name some-zookeeper --restart always zookeeper:3.4.9
+docker ps # 查看所有容器的运行状态
+
+docker exec -it some-zookeeper bash  # 进入zookeeper容器
+~~~
+
+#### zookeeper指令
+
+~~~shell
+# 以下命令需要先进入zookeeper容器
+./bin/zkCli.sh  # 进入zookeeper交互式命令行
+ls /   # 列出节点
+stat /mynode #查看节点状态
+get /mynode #获取节点信息
+history  # 列出最近的10条历史记录
+quit # 退出连接
+exit # 退出zookeeper容器
+~~~
+
+演示效果
+
+![zookeeper容器演示效果](assets/image-20200916200406774.png)
 
 # node.js
 
