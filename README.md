@@ -525,7 +525,7 @@ cd -  # 切换到上一次的目录
 top   # 查看系统内存、cpu等瞬时使用情况
 sudo service docker start  # 启动docker服务
 sudo service docker status # 查看docker服务的启动状态
-
+clear & clear  # 清屏 只输入一个向上翻还可以看到历史记录 输入两次 clear 则完全清除
 ~~~
 
 查看服务启动状态 效果如下
@@ -968,13 +968,14 @@ sudo docker run -d -p 2181:2181 --name some-zookeeper --restart always zookeeper
 sudo docker ps # 查看所有容器的运行状态
 
 sudo docker exec -it some-zookeeper bash  # 进入zookeeper容器
+
 ~~~
 
-#### zookeeper指令
+### zookeeper指令
 
 ~~~shell
 # 以下命令需要先进入zookeeper容器
-./bin/zkCli.sh  # 进入zookeeper交互式命令行
+./bin/zkCli.sh  # 进入zookeeper交互式命令行  若是本机安装则 ./zkCli.sh
 ls /   # 列出节点
 stat /mynode #查看节点状态
 get /mynode #获取节点信息
@@ -986,6 +987,43 @@ exit # 退出zookeeper容器
 演示效果
 
 ![zookeeper容器演示效果](assets/docker_zookeeper.png)
+
+### ~~集群~~ (测试未通过)
+
+~~~shell
+## 新建集群目录
+mkdir ~/tmp/zookeeper-cluster/node1
+mkdir ~/tmp/zookeeper-cluster/node2
+mkdir ~/tmp/zookeeper-cluster/node3
+ls -la ~/tmp/zookeeper-cluster 
+
+
+# 启动三个zookeeper容器 分别运行在不同的端口
+sudo docker run -d -p 2181:2181 --name zookeeper_node1 --privileged --restart always --network zoonet --ip 172.18.0.2 \
+-v ~/tmp/zookeeper-cluster/node1/volumes/data:/data \
+-v ~/tmp/zookeeper-cluster/node1/volumes/datalog:/datalog \
+-v ~/tmp/zookeeper-cluster/node1/volumes/logs:/logs \
+-e ZOO_MY_ID=1 \
+-e "ZOO_SERVERS=server.1=172.18.0.2:2888:3888;2181 server.2=172.18.0.3:2888:3888;2181 server.3=172.18.0.4:2888:3888;2181" zookeeper:3.4.9
+
+sudo docker run -d -p 2182:2181 --name zookeeper_node2 --privileged --restart always --network zoonet --ip 172.18.0.3 \
+-v ~/tmp/zookeeper-cluster/node2/volumes/data:/data \
+-v ~/tmp/zookeeper-cluster/node2/volumes/datalog:/datalog \
+-v ~/tmp/zookeeper-cluster/node2/volumes/logs:/logs \
+-e ZOO_MY_ID=2 \
+-e "ZOO_SERVERS=server.1=172.18.0.2:2888:3888;2181 server.2=172.18.0.3:2888:3888;2181 server.3=172.18.0.4:2888:3888;2181" zookeeper:3.4.9
+
+sudo docker run -d -p 2183:2181 --name zookeeper_node3 --privileged --restart always --network zoonet --ip 172.18.0.4 \
+-v ~/tmp/zookeeper-cluster/node3/volumes/data:/data \
+-v ~/tmp/zookeeper-cluster/node3/volumes/datalog:/datalog \
+-v ~/tmp/zookeeper-cluster/node3/volumes/logs:/logs \
+-e ZOO_MY_ID=3 \
+-e "ZOO_SERVERS=server.1=172.18.0.2:2888:3888;2181 server.2=172.18.0.3:2888:3888;2181 server.3=172.18.0.4:2888:3888;2181" zookeeper:3.4.9
+~~~
+
+
+
+
 
 # node.js
 
