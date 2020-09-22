@@ -516,6 +516,43 @@ niejun@localhost  ~ >
 - 执行 git add 后，会变成 (master +) 表示添加到了暂存区
 - 再执行git commit，master后的符号会消失
 
+## 安装 tree
+
+> tree可以以树形结构查看目录
+
+~~~shell
+sudo yum install tree  # 安装需要root权限
+tree --version # 查看是否安装成功
+~~~
+
+### tree常用命令
+
+~~~shell
+# 查看所有文件和目录 即包含隐藏文件
+tree -a 
+
+## 执行结果如下
+.
+└── zookeeper-cluster
+    ├── node1
+    │   └── volumes
+    │       ├── data
+    │       │   └── myid
+    ├── node2
+    │   └── volumes
+    │       ├── data
+    │       │   └── myid
+    │       ├── datalog
+    │       └── logs
+
+
+# 只显示目录 不显示文件
+tree -d
+
+# -f 在每个文件或目录之前，显示完整的相对路径名称。
+tree -f
+~~~
+
 ## linux常用shell命令
 
 ~~~shell
@@ -526,6 +563,7 @@ top   # 查看系统内存、cpu等瞬时使用情况
 sudo service docker start  # 启动docker服务
 sudo service docker status # 查看docker服务的启动状态
 clear & clear  # 清屏 只输入一个向上翻还可以看到历史记录 输入两次 clear 则完全清除
+
 ~~~
 
 查看服务启动状态 效果如下
