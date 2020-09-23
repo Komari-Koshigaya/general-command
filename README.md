@@ -553,7 +553,7 @@ tree -d
 tree -f
 ~~~
 
-## linux常用shell命令
+## 常用linux命令
 
 ~~~shell
 alias # 查看有哪些命令别名
@@ -563,12 +563,73 @@ top   # 查看系统内存、cpu等瞬时使用情况
 sudo service docker start  # 启动docker服务
 sudo service docker status # 查看docker服务的启动状态
 clear & clear  # 清屏 只输入一个向上翻还可以看到历史记录 输入两次 clear 则完全清除
-
 ~~~
 
 查看服务启动状态 效果如下
 
 ![查看服务端穷的那个状态](assets/image-20200916191653323.png)
+
+# shell脚本教程
+
+> 原文链接 [Bash脚本教程](https://wangdoc.com/bash/index.html)
+
+## 1.简介
+
+> Shell 这个单词的原意是“外壳”，跟 kernel（内核）相对应，比喻内核外面的一层，即用户跟内核交互的对话界面。
+>
+> 具体来说，Shell 这个词有多种含义。
+>
+> 首先，Shell 是一个程序，提供一个与用户对话的环境。这个环境只有一个命令提示符，让用户从键盘输入命令，所以又称为命令行环境（commandline，简写为 **CLI**）。Shell 接收到用户输入的命令，将命令送入操作系统执行，并将结果返回给用户。本书中，除非特别指明，Shell 指的就是命令行环境。
+>
+> 其次，Shell 是一个命令解释器，解释用户输入的命令。它支持变量、条件判断、循环操作等语法，所以用户可以用 Shell 命令写出各种小程序，又称为脚本（script）。这些脚本都通过 Shell 的解释执行，而不通过编译。
+
+历史上，主要的 Shell 有下面这些。
+
+- Bourne Shell（sh）
+- Bourne Again shell（bash） 【Bash 是目前最常用的 Shell】
+- C Shell（csh）
+- TENEX C Shell（tcsh）
+- Korn shell（ksh）
+- Z Shell（zsh）
+- Friendly Interactive Shell（fish）
+
+~~~shell
+$ echo $SHELL  # 查看当前运行的shell
+/bin/bash
+$ cat /etc/shells # 查看当前系统安装的所有shell
+
+## 查看本机的bash版本
+$ bash --version
+GNU bash，版本 5.0.3(1)-release (x86_64-pc-linux-gnu)
+# 或者
+$ echo $BASH_VERSION
+5.0.3(1)-release
+
+## 查看一个命令是内置命令，还是外部程序
+$ type echo
+echo is a shell builtin
+$ type ls
+ls is hashed (/bin/ls)
+~~~
+
+## 2.快捷键
+
+Bash 提供很多快捷键，可以大大方便操作。下面是一些最常用的快捷键，完整的介绍参见《行操作》一章。
+
+- `Ctrl + L`：清除屏幕并将当前行移到页面顶部。
+- `Ctrl + C`：中止当前正在执行的命令。
+- `Shift + PageUp`：向上滚动。
+- `Shift + PageDown`：向下滚动。
+- `Ctrl + U`：从光标位置删除到行首。
+- `Ctrl + K`：从光标位置删除到行尾。
+- `Ctrl + D`：关闭 Shell 会话。
+- `↑`，`↓`：浏览已执行命令的历史记录。
+
+## Bash 脚本入门
+
+> 原文 [Bash 脚本入门](https://wangdoc.com/bash/script.html)
+
+
 
 # git操作命令
 
