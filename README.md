@@ -40,21 +40,31 @@ PS：若宿主机连的是**wifi**，虚拟机要想访问外网，xshell连上�
 >
 > 1. 首先在宿主机上 查看当前连接网络的ipv4地址和默认网关（windows使用 ipconfig命令）
 >
+>    ![宿主机的网络详情](assets/ip_windows_host.png)
+>
 > 2. 查看虚拟机启用的网卡和ip地址(Centos使用的是 **ip addr** 而不是 ifconfig)
 >
 > ![ip_addr](assets/ip_addr.png)
 >
 > 可以看到此处启用的网卡名是  enp0s3
 >
-> 3. 修改上面对应网卡的配置文件，这里是 /etc/sysconfig/network-scripts/ifcfg-enp0s3，禁用 dhcp设置静态ip地址
+> 3. 修改上面对应网卡的配置文件，这里是 /etc/sysconfig/network-scripts/ifcfg-enp0s3  修改后的配置文件如右图()
 >
 > ![设置网卡](assets/ip_set_static.png)
 >
-> ​		把BOOTRPOTO修改成了static，是因为dhcp是自动获取，如果不改成static，我们在这里修改的这些地址不会生效，因为重启网络服务时，BOOTRPOTO的值决定了是自动分配还是使用静态数据，DNS1和DNS2对应的是宿主机的首选DNS服务器和备用DNS服务器
+> ​		把BOOTRPOTO修改成了static，是因为dhcp是自动获取，如果不改成static，我们在这里修改的这些地址不会生效，因为重启网络服务时，BOOTRPOTO的值决定了是自动分配还是使用静态数据，设置dns服务器
 >
 > 4. 重启网络  **sudo service network restart**
 >
 > 5. 经过上面操作后就可以 通过上面设置的静态ip地址 访问虚拟机里的web应用，xshell连接等。
+
+## 配置双网卡 NAT+桥接(推荐)
+
+> 为了能在宿主机使用 有线和wifi的情况下，虚拟机都能访问网络，推荐为虚拟机配置**双网卡([NAT模式](#wifi模式下推荐使用(NAT)) + [桥接模式](#桥接模式下设置固定ip地址(网线)))** 
+>
+> ![双网卡配置](assets/ip_enp0s3_enp0s8.png)
+>
+> PS: 一般虚拟机默认只有一张网卡，新建网卡 需要虚拟机处于关机模式
 
 # windows如何查看端口是否被占用
 
