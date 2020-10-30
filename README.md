@@ -1914,3 +1914,8 @@ python -m http.server
 > 比如，你在 /home/test/web 这个路径下执行的命令，网址输入 http://localhost:8000/index.html   
 >
 > 实际访问的是 /home/test/web/index.html 
+
+# [github相关骚操作](./github/README.md)
+
+
+
