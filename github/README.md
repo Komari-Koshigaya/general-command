@@ -30,13 +30,6 @@
 
 ![img](assets/create_github_main.png)
 
-## 制作徽章Badge
-
-[shields](https://shields.io/) 网站提供了很多徽章类型，要包括了：构建、代码覆盖率、分析
-闲谈，聊天、依赖关系、大小、下载等等。
-
-当在网站上设计好徽章之后，只需要将生成的URL放到README中，就可以在主页上看到啦，非常简单。
-
 ##  github-readme-stats
 
 >  [github-readme-stats](https://github.com/anuraghazra/github-readme-stats)  包括展示github的stars、commits、prs、issues ，展示github中使用的语言统计和 仓库
@@ -263,3 +256,162 @@ jobs:
 - 仓库设置为私有。
 - 仓库名称不再与Github用户名匹配。
 
+# 制作徽章Badge
+
+## 效果图
+
+github开源仓库常见以下效果图
+
+![image-20201101160702669](assets/badge_demo.png)
+
+对应标签
+
+```markdown
+<p align="center">
+ <img width="100px" src="https://res.cloudinary.com/anuraghazra/image/upload/v1594908242/logo_ccswme.svg" align="center" alt="GitHub Readme Stats" />
+ <h2 align="center">GitHub Readme Stats</h2>
+ <p align="center">Get dynamically generated GitHub stats on your readmes!</p>
+</p>
+  <p align="center">
+    <a href="https://github.com/anuraghazra/github-readme-stats/actions">
+      <img alt="Tests Passing" src="https://github.com/anuraghazra/github-readme-stats/workflows/Test/badge.svg" />
+    </a>
+    <a href="https://codecov.io/gh/anuraghazra/github-readme-stats">
+      <img src="https://codecov.io/gh/anuraghazra/github-readme-stats/branch/master/graph/badge.svg" />
+    </a>
+    <a href="https://github.com/anuraghazra/github-readme-stats/issues">
+      <img alt="Issues" src="https://img.shields.io/github/issues/anuraghazra/github-readme-stats?color=0088ff" />
+    </a>
+    <a href="https://github.com/anuraghazra/github-readme-stats/pulls">
+      <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/anuraghazra/github-readme-stats?color=0088ff" />
+    </a>
+    <br />
+    <br />
+    <a href="https://a.paddle.com/v2/click/16413/119403?link=1227">
+      <img src="https://img.shields.io/badge/Supported%20by-VSCode%20Power%20User%20%E2%86%92-gray.svg?colorA=655BE1&colorB=4F44D6&style=for-the-badge"/>
+    </a>
+    <a href="https://a.paddle.com/v2/click/16413/119403?link=2345">
+      <img src="https://img.shields.io/badge/Supported%20by-Node%20Cli.com%20%E2%86%92-gray.svg?colorA=61c265&colorB=4CAF50&style=for-the-badge"/>
+    </a>
+  </p>
+
+  <p align="center">
+    <a href="#demo">View Demo</a>
+    ·
+    <a href="https://github.com/anuraghazra/github-readme-stats/issues/new/choose">Report Bug</a>
+    ·
+    <a href="https://github.com/anuraghazra/github-readme-stats/issues/new/choose">Request Feature</a>
+  </p>
+  <p align="center">
+    <a href="/docs/readme_fr.md">Français </a>
+    ·
+    <a href="/docs/readme_cn.md">简体中文</a>
+    ·
+    <a href="/docs/readme_es.md">Español</a>
+    ·
+    <a href="/docs/readme_de.md">Deutsch</a>
+    ·
+    <a href="/docs/readme_ja.md">日本語</a>
+    ·
+    <a href="/docs/readme_pt-BR.md">Português Brasileiro</a>
+    ·
+    <a href="/docs/readme_it.md">Italiano</a>
+    ·
+    <a href="/docs/readme_kr.md">한국어</a>
+    .
+    <a href="/docs/readme_nl.md">Nederlands</a>
+  </p>
+</p>
+<p align="center">Loved the project? Please consider <a href="https://www.paypal.me/anuraghazra">donating</a> to help it improve!
+```
+
+
+<p align="center">
+ <img width="100px" src="https://res.cloudinary.com/anuraghazra/image/upload/v1594908242/logo_ccswme.svg" align="center" alt="GitHub Readme Stats" />
+ <h2 align="center">GitHub Readme Stats</h2>
+ <p align="center">Get dynamically generated GitHub stats on your readmes!</p>
+</p>
+  <p align="center">
+    <a href="https://github.com/anuraghazra/github-readme-stats/actions">
+      <img alt="Tests Passing" src="https://github.com/anuraghazra/github-readme-stats/workflows/Test/badge.svg" />
+    </a>
+    <a href="https://codecov.io/gh/anuraghazra/github-readme-stats">
+      <img src="https://codecov.io/gh/anuraghazra/github-readme-stats/branch/master/graph/badge.svg" />
+    </a>
+    <a href="https://github.com/anuraghazra/github-readme-stats/issues">
+      <img alt="Issues" src="https://img.shields.io/github/issues/anuraghazra/github-readme-stats?color=0088ff" />
+    </a>
+    <a href="https://github.com/anuraghazra/github-readme-stats/pulls">
+      <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/anuraghazra/github-readme-stats?color=0088ff" />
+    </a>
+    <br />
+    <br />
+    <a href="https://a.paddle.com/v2/click/16413/119403?link=1227">
+      <img src="https://img.shields.io/badge/Supported%20by-VSCode%20Power%20User%20%E2%86%92-gray.svg?colorA=655BE1&colorB=4F44D6&style=for-the-badge"/>
+    </a>
+    <a href="https://a.paddle.com/v2/click/16413/119403?link=2345">
+      <img src="https://img.shields.io/badge/Supported%20by-Node%20Cli.com%20%E2%86%92-gray.svg?colorA=61c265&colorB=4CAF50&style=for-the-badge"/>
+    </a>
+  </p>
+
+  <p align="center">
+    <a href="#demo">View Demo</a>
+    ·
+    <a href="https://github.com/anuraghazra/github-readme-stats/issues/new/choose">Report Bug</a>
+    ·
+    <a href="https://github.com/anuraghazra/github-readme-stats/issues/new/choose">Request Feature</a>
+  </p>
+  <p align="center">
+    <a href="/docs/readme_fr.md">Français </a>
+    ·
+    <a href="/docs/readme_cn.md">简体中文</a>
+    ·
+    <a href="/docs/readme_es.md">Español</a>
+    ·
+    <a href="/docs/readme_de.md">Deutsch</a>
+    ·
+    <a href="/docs/readme_ja.md">日本語</a>
+    ·
+    <a href="/docs/readme_pt-BR.md">Português Brasileiro</a>
+    ·
+    <a href="/docs/readme_it.md">Italiano</a>
+    ·
+    <a href="/docs/readme_kr.md">한국어</a>
+    .
+    <a href="/docs/readme_nl.md">Nederlands</a>
+  </p>
+<p align="center">Loved the project? Please consider <a href="https://www.paypal.me/anuraghazra">donating</a> to help it improve!
+
+
+## 如何制作
+
+[shields](https://shields.io/) 网站提供了很多徽章类型，要包括了：构建、代码覆盖率、分析
+闲谈，聊天、依赖关系、大小、下载等等。
+
+当在网站上设计好徽章之后，只需要将生成的URL放到README中，就可以在主页上看到啦，非常简单。
+
+### 基本信息
+
+~~~
+https://img.shields.io/badge/<LABEL>-<MESSAGE>-<COLOR>
+如 https://img.shields.io/badge/bootstrap-4.9-green 效果如下
+~~~
+
+![bootstrap](https://img.shields.io/badge/bootstrap-4.9-green)
+
+## 加上样式
+
+在基本信息后加上下列字符串即可 实现对应效果
+
+| `?style=plastic&logo=appveyor`       | ![plastic](https://img.shields.io/badge/style-plastic-green?logo=appveyor&style=plastic) |
+| ------------------------------------ | ------------------------------------------------------------ |
+| `?style=flat&logo=appveyor`          | ![flat](https://img.shields.io/badge/style-flat-green?logo=appveyor&style=flat) |
+| `?style=flat-square&logo=appveyor`   | ![flat-square](https://img.shields.io/badge/style-flat--square-green?logo=appveyor&style=flat-square) |
+| `?style=for-the-badge&logo=appveyor` | ![for-the-badge](https://img.shields.io/badge/style-for--the--badge-green?logo=appveyor&style=for-the-badge) |
+| `?style=social&logo=appveyor`        | ![social](https://img.shields.io/badge/style-plastic-green?logo=appveyor&style=social)                        |
+
+所有logo 可以在 [simpleicons](https://simpleicons.org/) 找到对应的名字替换即可
+
+如 `https://img.shields.io/badge/bootstrap-4.9-green?logo=twitter`
+
+![twitter](https://img.shields.io/badge/follow-1893754-green?logo=twitter)
