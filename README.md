@@ -1138,7 +1138,8 @@ sudo docker run -d -p 2183:2181 --name zookeeper_node3 --privileged --restart al
 
 # node.js
 
-> ###### 安装node.js
+## 安装node.js
+
 >
 > 1. 进入[node.js官网](https://nodejs.org/en/download/), 下载 linux 版本的源码
 >
@@ -1186,25 +1187,16 @@ sudo docker run -d -p 2183:2181 --name zookeeper_node3 --privileged --restart al
 > npm -v		//成功会显示版本号
 > ```
 >
-> 5.  为npm添加淘宝镜像 (非必须项)
->
->    npm config set registry https://registry.npm.taobao.org
->    完成后可以使用：
->
->    npm config get registry
->    查看修改结果。
->
->    
->
->     使用淘宝npm镜像的cnpm（本文使用的方法）
->
->    因为下载都是国外服务器很慢会掉线，我们需要使用淘宝的npm镜像cnpm。执行命令：
->
->    npm install -g cnpm --registry=https://registry.npm.taobao.org
->    启用淘宝的npm镜像cnpm，注意：启用后当我们要输入npm命令时，就需要输入cnpm
+## 添加淘宝镜像源
+
+> 因为下载都是国外服务器很慢会掉线，我们需要使用淘宝的npm镜像
 >
 > PS: 通过 npm 安装的库，都在 node.js的根目录/lib/node_modules,eg: /home/niejun/nodejs/lib/node_modules/truffle   
 
+```shell
+npm config set registry https://registry.npm.taobao.org
+npm config get registry  #查看修改结果
+```
 ## 使用 npm 命令安装模块
 
 npm 安装 Node.js 模块语法格式如下：
@@ -1387,6 +1379,13 @@ $ npm update express
 
 ```bash
 $ npm search express
+```
+
+## 查看已安装的模块
+
+```shell
+$ npm list web3 # 如已安装，则返回版本号和安装的位置 优先从当前目录查询
+$ npm list -g web3 # 查询全局安装的web3.js 如已安装，则返回版本号和安装的位置
 ```
 
 # MongoDB的用法
