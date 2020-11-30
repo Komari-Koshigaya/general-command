@@ -565,6 +565,33 @@ tree -d
 tree -f
 ~~~
 
+## 升级python3
+
+> 默认只有python2 python3需要手动升级
+
+~~~shell
+python -V  # 查看当前 python 版本
+cd ~/tmp
+wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz  # 若未安装 wget 可下载后手动上传到 服务器
+
+# 2. 解压后编译
+tar -xf Python-3.7.0.tgz
+cd Python-3.7.0
+./configure --with-ssl
+make
+make install
+~~~
+
+> `make install` 报错可以先 `python3 -V` 看下是否显示版本号，没问题可以不用管包错问题
+
+### 后续问题
+
+若 python -V 指向 python 3.x，系统对于yum的调用会出问题，所以需要修改下yum的相关配置
+
+推荐修改默认 python 直接指向 python2.x，要使用python3.x的时候，使用 `python3`指定，如
+
+打开http服务(只有python3可用): `python3 -m http.server`
+
 ## 常用linux命令
 
 ~~~shell
@@ -1902,7 +1929,7 @@ http请求方式则是通过假架设一个web服务器，解析http协议的请
 
 ## 启动http服务
 
-> 启动http服务，Python自带一个微型的http服务，可以通过命令行启动:
+> 启动http服务，Python自带一个微型的http服务(只适合python3.x)，可以通过命令行启动:
 
 ```bash
 python -m http.server 
