@@ -484,6 +484,25 @@ ZSH_THEME_RANDOM_CANDIDATES=(
 )
 ```
 
+### 历史命令自动补全即命令高亮插件
+
+```shell
+git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions  # 历史命令自动补全
+git clone git://github.com/zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting # 高亮显示
+
+vim ~/.zshrc
+# 在plugins字段里将插件名称加进去，
+# plugins=(
+#  git
+#  zsh-autosuggestions
+#  zsh-syntax-highlighting
+# )
+
+source .zshrc # 让配置文件生效即可
+```
+
+
+
 ### 卸载 zsh和oh My Zsh
 
 ~~~shell
