@@ -547,6 +547,10 @@ niejun@localhost  ~ >
 - 执行 git add 后，会变成 (master +) 表示添加到了暂存区
 - 再执行git commit，master后的符号会消失
 
+### zsh: command not found
+
+> 有时候安装了其他软件时，会出现`zsh: command not found`的报错，这是由于该软件的执行路径错误添加到`.bashrc`， 而没有添加到`.zshrc`。只需要将其从`.bashrc`复制到`.zshrc`即可。
+
 ## 安装 tree
 
 > tree可以以树形结构查看目录
