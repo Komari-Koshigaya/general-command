@@ -931,6 +931,13 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 
 > 提交信息在提交类型前有个emoji，但在windows命令行下无法正常显示，接下来介绍如何关闭表情
 >
+> ```js
+> G:\Linux\虚拟机软件及系统包\VMs\niejun\gitpro\testgit>git lg
+> * 310ca9d - (HEAD -> master, origin/master, origin/HEAD)feat: add `gcz` to disable emoji in git-cz (13 seconds ago) <niejun>
+> * 1be6d63 -feat: <F0><9F><8E><B8> update tree command description for  windows (46 minutes ago) <niejun>
+> * 6be8866 -feat: <F0><9F><8E><B8> add description about Rust and Cargo (7 days ago) <niejun>
+> ```
+>
 > # 方法一
 >
 > 通过 `git cz --disable-emoji` 命令无表情提交，较繁琐，每次提交都得打这么一串
@@ -943,7 +950,7 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 > //node安装目录下的gitcz.cmd line12
 > // after
 > "%_prog%"  "%dp0%\node_modules\git-cz\bin\git-cz.js" "--disable-emoji" %*
->     
+> 
 > // before
 > "%_prog%"  "%dp0%\node_modules\git-cz\bin\git-cz.js" %*
 > ```
