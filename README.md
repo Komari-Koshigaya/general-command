@@ -560,6 +560,36 @@ sudo yum install tree  # 安装需要root权限
 tree --version # 查看是否安装成功
 ~~~
 
+### windows上安装使用
+
+在 [tree for windows](https://sourceforge.net/projects/gnuwin32/files/tree/1.5.2.2/) 下载可执行的二进制文件`bin`，解压bin目录下的tree.exe复制到git目录的bin目录下，或者把tree.exe放到任意一个已经存在的path路径下，而后使用`tree.exe -N`命令即可
+
+```shell
+# windows上使用方法
+tree.exe -N # -N表示按原样输出不可打印字符，否则无法输出中文
+
+# 示例
+G:\Linux\虚拟机软件及系统包\VMs\niejun\gitpro\testgit>tree.exe -L 1
+.
+|-- README.md
+|-- assets
+|-- github
+`-- git\263\243\323\303\303\374\301\356.txt
+
+2 directories, 2 files
+
+G:\Linux\虚拟机软件及系统包\VMs\niejun\gitpro\testgit>tree.exe -L 1 -N
+.
+|-- README.md
+|-- assets
+|-- github
+`-- git常用命令.txt
+
+2 directories, 2 files
+```
+
+
+
 ### tree常用命令
 
 ~~~shell
@@ -580,12 +610,11 @@ tree -a 
     │       ├── datalog
     │       └── logs
 
-
-# 只显示目录 不显示文件
-tree -d
-
-# -f 在每个文件或目录之前，显示完整的相对路径名称。
-tree -f
+tree -f # -f 在每个文件或目录之前，显示完整的相对路径名称
+tree -i # -i 不显示   “树枝”  ，当需要获取所有文件的完整路径时，这个命令很好用。
+tree -dL 1 /usr/local/   #-d参数只显示目录，-L参数显示层数，这里是1层
+tree -D #显示文件的最后修改时间
+tree -I “node_modules” # 可以过滤掉node_modules这个文件夹
 ~~~
 
 ## 升级python3
