@@ -927,6 +927,33 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 >
 > ![git-cz截图	](assets/git-cz_result.png)
 
+### 关闭提交信息的表情
+
+> 提交信息在提交类型前有个emoji，但在windows命令行下无法正常显示，接下来介绍如何关闭表情
+>
+> # 方法一
+>
+> 通过 `git cz --disable-emoji` 命令无表情提交，较繁琐，每次提交都得打这么一串
+>
+> # 方法二【推荐】
+>
+> 修改`node-v12-win-x64/gitcz.cmd`文件，
+>
+> ```js
+> //node安装目录下的gitcz.cmd line12
+> // after
+> "%_prog%"  "%dp0%\node_modules\git-cz\bin\git-cz.js" "--disable-emoji" %*
+>     
+> // before
+> "%_prog%"  "%dp0%\node_modules\git-cz\bin\git-cz.js" %*
+> ```
+>
+> 并将其重命名为`gcz.cmd` 这样后续，`git cz`有表情提交，`gcz` 无表情提交，简化命令、一劳永逸。
+>
+> > ps：可以这样做是因为node安装目录已经写入了环境变量，而`gcz.cmd` 在Windows上可以直接`gcz`来执行。 
+
+
+
 ## 根据 commit自动生成 changelog.md
 
 > 需要先安装node.js，且 commit 历史记录是符合规范的，如使用上面介绍的 git-cz 提交
