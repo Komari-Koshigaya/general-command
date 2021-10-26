@@ -1022,6 +1022,30 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 > 	url = git@gitee.com:komari/general-command.git
 > ~~~
 
+### git@github.com: Permission denied (publickey)
+
+使用`git push` 出现该问题
+
+```shell
+F:\tutorial>git push
+git@gitee.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+```
+
+> 解决办法：
+>
+> [(17条消息) win10 unable to start ssh-agent service, error :1058 解决办法_Mr.Justwe的博客-CSDN博客](https://blog.csdn.net/qq_19926599/article/details/86380544)
+>
+> ```shell
+> >ssh-agent -s # 先看ssh服务是否有问题
+> unable to start ssh-agent service, error :1058
+> ```
+>
+> 
+
 # docker使用方法
 
 详见   [如何使用docker部署springboot项目](https://github.com/Komari-Koshigaya/university-services-with-miniprogram)
@@ -2243,6 +2267,19 @@ python -m http.server
 > 比如，你在 /home/test/web 这个路径下执行的命令，网址输入 http://localhost:8000/index.html   
 >
 > 实际访问的是 /home/test/web/index.html 
+
+# cmd的妙用
+
+> windows无法使用zsh，实现`gst = git status`的效果，那么是不是就做不到了呢。并不是，可以通过cmd文件曲线救国。
+
+在已经加入过环境变量的文件夹(如`git/bin`)下新建`gst.cmd` 文件，写入以下内容
+
+```cmd
+@echo off
+git status %*
+```
+
+后续在任何目录下都可以通过`gst` 来实现`git status`的效果。原理：本质上是执行`gst.cmd`文件。
 
 # [github相关骚操作](./github/README.md)
 
