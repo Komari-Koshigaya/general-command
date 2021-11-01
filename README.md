@@ -458,6 +458,12 @@ zsh --version  # 查看是否安装成功
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"  # 执行完毕会自动切换到zsh
 ```
 
+> 或者下载 https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+> 再 `sh install.sh`
+>
+> 若出现 复制.oh-my-zsh仓库失败则，修改install.sh第46行为 `REMOTE=${REMOTE:-git@github.com:ohmyzsh/ohmyzsh.git}`
+> 再 `sh install.sh` 即可
+
 ### shell之间的切换
 
 ```shell
