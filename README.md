@@ -630,14 +630,28 @@ tree -I “node_modules” # 可以过滤掉node_modules这个文件夹
 ~~~shell
 python -V  # 查看当前 python 版本
 cd ~/tmp
-wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz  # 若未安装 wget 可下载后手动上传到 服务器
+wget https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tgz  # 若未安装 wget 可下载后手动上传到 服务器
 
 # 2. 解压后编译
-tar -xf Python-3.7.0.tgz
-cd Python-3.7.0
-./configure --with-ssl
+tar -xf Python-3.7.2.tgz
+cd Python-3.7.2
+./configure
 make
 make install
+
+# 3. 验证是否安装成功
+python3-V
+python-V  # 看看python2是否还在
+
+# 4. 设置python3为默认版本
+ls -al /usr/bin | grep python # 查看软连接，可以看到python是指向了python2
+mv /usr/bin/python /usr/bin/python.bak  # 将原来 python 的软链接重命名
+ln -s /usr/local/bin/python3 /usr/bin/python  # 将 python 链接至 python3
+
+# 5. 修改yum部分文件[将python升级为3.x后，yum不能正常使用，需要编辑 yum 的配置文件]
+sudo vi /usr/bin/yum # 进行修改 /usr/bin/python ===》 /usr/bin/python2
+sudo vi /usr/libexec/urlgrabber-ext-down  # 进行修改 /usr/bin/python ===》 /usr/bin/python2
+# 保存退出即可
 ~~~
 
 > `make install` 报错可以先 `python3 -V` 看下是否显示版本号，没问题可以不用管包错问题
