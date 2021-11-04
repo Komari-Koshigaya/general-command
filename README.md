@@ -506,7 +506,15 @@ vim ~/.zshrc
 
 source .zshrc # 让配置文件生效即可
 ```
+### 设置别名，如cls
+```shell
+# 修改 ~/.zshrc 在最后一行加入
+alias cls="clear && clear"
+alias ipconfig="wget -O - -q https://icanhazip.com/"
 
+source ~/.zshrc
+```
+这样，直接输入 `cls`即可清屏, `ipconfig`即可查看服务器的公网ip地址
 
 
 ### 卸载 zsh和oh My Zsh
