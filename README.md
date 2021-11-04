@@ -1192,6 +1192,25 @@ sudo docker exec -it sqlserver /bin/bash  # 登录容器
 # 使用 navicat之类的登录时 用户名：sa  密码: Nie@*123
 ~~~
 
+## 安装运行remix编辑器
+
+> 参考 [ethereum/remix-project: Remix is a browser-based compiler and IDE ](https://github.com/ethereum/remix-project#docker)
+
+```shell
+docker pull remixproject/remix-ide:latest
+docker run --name remix -d -p 8080:80 remixproject/remix-ide:latest
+
+docker stop remix
+docker start remix
+docker restart remix
+docker logs remix
+
+# 浏览器打开 http://localhost:8080  打开会有点慢
+
+```
+
+
+
 ## 安装nginx并部署一个html静态网站
 
 > 参考 [docker安装nginx并部署一个html静态网站 - 云+社区 - 腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1665807)
