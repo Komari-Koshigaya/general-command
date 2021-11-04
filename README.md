@@ -1209,6 +1209,15 @@ docker logs remix
 
 ```
 
+## 安装运行私有链 ganache-cli
+
+> 参考 [trufflesuite/ganache-cli-archive: Fast Ethereum RPC client for testing and development](https://github.com/trufflesuite/ganache-cli-archive#docker)
+
+```shell
+docker pull trufflesuite/ganache-cli
+docker run --name b --detach --publish 8545:8545 trufflesuite/ganache-cli:latest
+```
+
 
 
 ## 安装nginx并部署一个html静态网站
