@@ -1886,6 +1886,16 @@ $ npm list web3 # 如已安装，则返回版本号和安装的位置 优先从�
 $ npm list -g web3 # 查询全局安装的web3.js 如已安装，则返回版本号和安装的位置
 ```
 
+## 找不到全局安装的模块？
+
+windows：在环境变量里新建系统变量，
+
+变量名: `NODE_PATH`
+
+变量值：如`G:\ProgrammingSoftware\front-end\node-v14.15.0-win-x64\node_modules`
+
+
+
 # MongoDB的用法
 
 ## 基本操作及概念
