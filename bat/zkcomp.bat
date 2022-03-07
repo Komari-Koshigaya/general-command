@@ -6,21 +6,24 @@
 @echo off
 
 :: 通过第二个参数来判断是否只生成证据
-if "%2"=="prove" (
+if "%2" == "prove" (
     set a=1
     if not exist input_%1.json set a=0
     if not exist build/%1.wasm set a=0
     if not exist build/circuit_final_%1.zkey set a=0
 
-    if %a% == 0 (
+    rem echo %a%
+    IF "%a%"=="0" (
         echo ==========execute 'zkcomp %1' firstly==========  && GOTO end
     )
 
-    mkdir build >Nul 2>Nul
-    cd build
+
+    cd ./build
     move /y %1.wasm ../ >Nul 2>Nul
     move /y circuit_final_%1.zkey ../ >Nul 2>Nul
     cd ..
+    rem echo %cd%
+
     Goto prove
 )
 
@@ -60,7 +63,7 @@ echo ============执行成功！！！已生成证据=========== && Goto end
 echo ============执行出错!!! 请检查电路文件或input.json=========== && Goto end
 
 :end
-del /f /s /q *.r1cs  *_00*.zkey 2>NUL
+del /f /s /q *.r1cs  *_00*.zkey >Nul 2>NUL
 
 
 :: 将所有编译生成的文件移动到 build文件夹
