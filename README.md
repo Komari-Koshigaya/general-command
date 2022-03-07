@@ -945,6 +945,73 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 
 ***推荐使用方法二***
 
+## 配置WinMerge作为git对比合并工具
+
+> 参考 [Windows 下配置 WinMerge 作为 Git 的比对工具 - Hello YU (180811.xyz)](https://180811.xyz/index.php/archives/9/)
+
+### How to install WinMerge in git
+
+1. 去[官方仓库](https://github.com/WinMerge/winmerge/releases)下载对应系统版本的WinMerge并安装（一路默认设置）
+2. 找到git配置文件.gitconfig ，windows用户一般在用户文件夹`C:\Users\%username%`下，如果你是别的系统就甭看了，没发现是**Win**merge吗（逃
+3. 在其中加入如下配置
+
+```
+[diff]
+tool = winmerge
+[difftool "winmerge"]
+cmd = "'C:/Program Files (x86)/WinMerge/WinMergeU.exe'" -e "$LOCAL" "$REMOTE"
+[difftool]
+prompt = false
+[merge]
+tool = winmerge
+[mergetool "winmerge"]
+cmd = "/c/Program\\ Files\\ \\(x86\\)/WinMerge/WinMergeU.exe" -u -e -wl -wr $LOCAL $BASE $REMOTE -o $MERGED
+
+# 或者     cmd = \"G:/ProgrammingSoftware/WinMerge2.16.18/WinMergeU.exe\" -e -u -dl \"Old $BASE\" -dr \"New $BASE\" \"$LOCAL\" \"$REMOTE\"
+
+[mergetool]
+keepBackup = true
+trustExitCode =true
+```
+
+------
+
+### 使用
+
+比较差异
+
+```
+git difftool <file_name>
+```
+
+合并冲突
+
+```
+git mergetool
+```
+
+------
+
+### 简化命令
+
+
+
+实际使用过程中觉得命令太长，没有效率，可以给它们配置别名。
+
+```
+git config --global alias.dft difftool
+git config --global alias.mgt mergetool
+```
+
+比如我就将 `difftool`、`mergetool` 配置了 `dft`、`mgt` 这样的别名，使用的时候直接如下即可
+
+```
+git dft
+git mgt
+```
+
+
+
 ## git-cz规范提交信息
 
 > 需要先安装node.js, 安装方法见  [如何安装node.js](#nodejs), 而后安装 git-cz
