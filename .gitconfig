@@ -2,8 +2,24 @@
 	name = niejun
 	email = 2323384399@qq.com
 [alias]
-	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset%s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	lg = log --graph --pretty=format:'%Cred%h%Creset %C(yellow)%d%Creset%s %Cgreen(%cd) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	# lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset%s %Cgreen(%cd) %C(bold blue)<%an>%Creset' --abbrev-commit --date=human
 [color]
 	ui = true
 [core]
 	quotepath = false
+[http]
+	postBuffer = 224288000
+
+
+# 修改git diff，配置 winmerge为默认比较工具, 使用方案 git difftool <file_name>
+[diff]
+    tool = winMerge 
+[difftool]
+    prompt = false
+[difftool "winMerge"]
+    cmd = \"G:/ProgrammingSoftware/WinMerge2.16.18/WinMergeU.exe\" -e -u -dl \"Old $BASE\" -dr \"New $BASE\" \"$LOCAL\" \"$REMOTE\"
+    trustExitCode = true
+# 简化命令 git difftool -> git dft
+[alias]
+	dft = difftool

@@ -458,6 +458,12 @@ zsh --version  # 查看是否安装成功
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"  # 执行完毕会自动切换到zsh
 ```
 
+> 或者下载 https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+> 再 `sh install.sh`
+>
+> 若出现 复制.oh-my-zsh仓库失败则，修改install.sh第46行为 `REMOTE=${REMOTE:-git@github.com:ohmyzsh/ohmyzsh.git}`
+> 再 `sh install.sh` 即可
+
 ### shell之间的切换
 
 ```shell
@@ -500,7 +506,15 @@ vim ~/.zshrc
 
 source .zshrc # 让配置文件生效即可
 ```
+### 设置别名，如cls
+```shell
+# 修改 ~/.zshrc 在最后一行加入
+alias cls="clear && clear"
+alias ipconfig="wget -O - -q https://icanhazip.com/"
 
+source ~/.zshrc
+```
+这样，直接输入 `cls`即可清屏, `ipconfig`即可查看服务器的公网ip地址
 
 
 ### 卸载 zsh和oh My Zsh
@@ -624,14 +638,28 @@ tree -I “node_modules” # 可以过滤掉node_modules这个文件夹
 ~~~shell
 python -V  # 查看当前 python 版本
 cd ~/tmp
-wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz  # 若未安装 wget 可下载后手动上传到 服务器
+wget https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tgz  # 若未安装 wget 可下载后手动上传到 服务器
 
 # 2. 解压后编译
-tar -xf Python-3.7.0.tgz
-cd Python-3.7.0
-./configure --with-ssl
+tar -xf Python-3.7.2.tgz
+cd Python-3.7.2
+./configure
 make
 make install
+
+# 3. 验证是否安装成功
+python3-V
+python-V  # 看看python2是否还在
+
+# 4. 设置python3为默认版本
+ls -al /usr/bin | grep python # 查看软连接，可以看到python是指向了python2
+mv /usr/bin/python /usr/bin/python.bak  # 将原来 python 的软链接重命名
+ln -s /usr/local/bin/python3 /usr/bin/python  # 将 python 链接至 python3
+
+# 5. 修改yum部分文件[将python升级为3.x后，yum不能正常使用，需要编辑 yum 的配置文件]
+sudo vi /usr/bin/yum # 进行修改 /usr/bin/python ===》 /usr/bin/python2
+sudo vi /usr/libexec/urlgrabber-ext-down  # 进行修改 /usr/bin/python ===》 /usr/bin/python2
+# 保存退出即可
 ~~~
 
 > `make install` 报错可以先 `python3 -V` 看下是否显示版本号，没问题可以不用管包错问题
@@ -916,6 +944,73 @@ origin  git@github.com:Komari-Koshigaya/apue-lab.git (push)
 *这种方法的好处是每次只需要*    `git push` *一次就行了。*
 
 ***推荐使用方法二***
+
+## 配置WinMerge作为git对比合并工具
+
+> 参考 [Windows 下配置 WinMerge 作为 Git 的比对工具 - Hello YU (180811.xyz)](https://180811.xyz/index.php/archives/9/)
+
+### How to install WinMerge in git
+
+1. 去[官方仓库](https://github.com/WinMerge/winmerge/releases)下载对应系统版本的WinMerge并安装（一路默认设置）
+2. 找到git配置文件.gitconfig ，windows用户一般在用户文件夹`C:\Users\%username%`下，如果你是别的系统就甭看了，没发现是**Win**merge吗（逃
+3. 在其中加入如下配置
+
+```
+[diff]
+tool = winmerge
+[difftool "winmerge"]
+cmd = "'C:/Program Files (x86)/WinMerge/WinMergeU.exe'" -e "$LOCAL" "$REMOTE"
+[difftool]
+prompt = false
+[merge]
+tool = winmerge
+[mergetool "winmerge"]
+cmd = "/c/Program\\ Files\\ \\(x86\\)/WinMerge/WinMergeU.exe" -u -e -wl -wr $LOCAL $BASE $REMOTE -o $MERGED
+
+# 或者     cmd = \"G:/ProgrammingSoftware/WinMerge2.16.18/WinMergeU.exe\" -e -u -dl \"Old $BASE\" -dr \"New $BASE\" \"$LOCAL\" \"$REMOTE\"
+
+[mergetool]
+keepBackup = true
+trustExitCode =true
+```
+
+------
+
+### 使用
+
+比较差异
+
+```
+git difftool <file_name>
+```
+
+合并冲突
+
+```
+git mergetool
+```
+
+------
+
+### 简化命令
+
+
+
+实际使用过程中觉得命令太长，没有效率，可以给它们配置别名。
+
+```
+git config --global alias.dft difftool
+git config --global alias.mgt mergetool
+```
+
+比如我就将 `difftool`、`mergetool` 配置了 `dft`、`mgt` 这样的别名，使用的时候直接如下即可
+
+```
+git dft
+git mgt
+```
+
+
 
 ## git-cz规范提交信息
 
@@ -1202,6 +1297,153 @@ sudo docker exec -it sqlserver /bin/bash  # 登录容器
 
 # 使用 navicat之类的登录时 用户名：sa  密码: Nie@*123
 ~~~
+
+## 安装运行remix编辑器
+
+> 参考 [ethereum/remix-project: Remix is a browser-based compiler and IDE ](https://github.com/ethereum/remix-project#docker)
+
+```shell
+docker pull remixproject/remix-ide:latest
+docker run --name remix -d -p 8080:80 remixproject/remix-ide:latest
+
+docker stop remix
+docker start remix
+docker restart remix
+docker logs remix
+
+# 浏览器打开 http://localhost:8080  打开会有点慢
+
+```
+
+## 安装运行私有链 ganache-cli
+
+> 参考 [trufflesuite/ganache-cli-archive: Fast Ethereum RPC client for testing and development](https://github.com/trufflesuite/ganache-cli-archive#docker)
+
+```shell
+docker pull trufflesuite/ganache-cli
+docker run --name b --detach --publish 8545:8545 trufflesuite/ganache-cli:latest
+```
+
+
+
+## 安装nginx并部署一个html静态网站
+
+> 参考 [docker安装nginx并部署一个html静态网站 - 云+社区 - 腾讯云 (tencent.com)](https://cloud.tencent.com/developer/article/1665807)
+
+### 1.搜索安装的 nginx 镜像
+
+```javascript
+docker search nginx
+```
+
+### 2.在docker hub 中选择合适的版本后进行 镜像拉取
+
+```javascript
+ docker pull nginx
+```
+
+### 3.拉取完成后运行 nginx 容器
+
+ 使用 xftp 上传静态页面到服务器的/usr/html 目录下
+
+```shell
+docker run -di --name=nginx -p 90:80 -v /usr/html:/usr/share/nginx/html nginx
+# -d 后台运行
+# -i 交互方式运行
+# --name 自定义容器名称
+# -p 端口号映射 90 自定义为外部访问端口：80 为nginx容器对外暴露的端口
+# -v 目录挂载  冒号前为 外部目录，冒号后为 容器内目录；相当于外部目录中的内容会映射同步到容器内
+
+# 挂载nginx配置文件方式启动  【复杂启动方式 在需要修改配置的时候选用】
+mkdir ~/docker_data/nginx/conf.d
+vi ~/docker_data/nginx/conf.d/default.conf  # 复制"6.进入到容器的指定位置查看配置"里的内容
+docker rm -f nginx
+
+docker run -di --name=nginx -p 8000:80 \
+-v ~/project/blog_static_html:/usr/share/nginx/html \
+-v ~/docker_data/nginx/conf.d:/etc/nginx/conf.d \
+nginx
+```
+
+### 4.访问运行好的容器
+
+```javascript
+ ip:90          ip为当前服务器ip地址
+```
+
+### 5.进入到容器命令
+
+```javascript
+docker exec -it container-id/container-name bash
+# container-id     容器id
+# container-name   自定义容器名称
+
+root@eead621f72f3:/# nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+### 6.进入到容器的指定位置查看配置
+
+```javascript
+cd /etc/nginx/conf.d/
+cat default.conf 
+```
+
+可以看到默认的配置文件：
+
+```javascript
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  localhost;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    # nginx 的默认访问文件夹为 root  /usr/share/nginx/html
+    # nginx 的默认访问页面为  index  index.html  index.htm
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+
+	
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+	
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    #location ~ \.php$ {
+    #    proxy_pass   http://127.0.0.1;
+    #}
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    #location ~ \.php$ {
+    #    root           html;
+    #    fastcgi_pass   127.0.0.1:9000;
+    #    fastcgi_index  index.php;
+    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+    #    include        fastcgi_params;
+    #}
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    #location ~ /\.ht {
+    #    deny  all;
+    #}
+}
+```
+
+
 
 ## 安装运行zookeeper(单机&集群)
 
@@ -1741,6 +1983,16 @@ $ npm search express
 $ npm list web3 # 如已安装，则返回版本号和安装的位置 优先从当前目录查询
 $ npm list -g web3 # 查询全局安装的web3.js 如已安装，则返回版本号和安装的位置
 ```
+
+## 找不到全局安装的模块？
+
+windows：在环境变量里新建系统变量，
+
+变量名: `NODE_PATH`
+
+变量值：如`G:\ProgrammingSoftware\front-end\node-v14.15.0-win-x64\node_modules`
+
+
 
 # MongoDB的用法
 
